@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body> <!-- Sidebar Fragment -->
+    <div th:fragment="sidebar">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Dokumen [[${secondary}]]</h2> <input type="text" placeholder="Search" class="search-box" />
+            </div>
+            <ul class="tree"> <!-- Loop folder utama -->
+                <li th:each="entry : ${sidebar}" class="filterable-item"> <span class="folder-toggle"
+                        th:attr="data-target=${entry.key}">📂</span> <label class="folder-toggle"
+                        th:attr="data-target=${entry.key}"><b th:text="${entry.key}"></b></label>
+                    <ul th:id="${entry.key}" class="hidden"> <!-- Loop PDF -->
+                        <li th:each="pdf : ${entry.value}"> <span class="file-icon">📄</span>
+                            <!-- Tampilkan nama file dengan subfolder jika ada --> <span class="file-link"
+                                th:attr="data-file=${pdf.path}"
+                                th:text="${#strings.substringAfter(pdf.path, '/' + entry.key + '/')}"></span> </li>
+                        <!-- Kalau kosong -->
+                        <li th:if="${entry.value.size() == 0}"> <span class="file-icon">📄</span> <span
+                                class="file-link">coming soon</span> </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>FILW-NB - PT. LWI</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+   <div th:replace="fragments/navbar-base :: navbarBase('FILW-NB')"></div>
+   <div th:replace="fragments/navbar-secondary-filw :: secondaryFilw('AM')"></div>
+
+    <!-- ===== HERO CONTENT + PDF VIEWER ===== -->
+    <section class="hero-gray">
+        <div class="hero-content">
+            <p>Silahkan pilih informasi di atas untuk ditampilkan:</p>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
+

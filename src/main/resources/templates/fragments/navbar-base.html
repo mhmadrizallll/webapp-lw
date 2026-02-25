@@ -1,0 +1,23 @@
+<!-- templates/fragments/navbar-base.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="navbarBase(primary)">
+  <header>
+    <h1>
+      <a th:href="@{/}" style="color:#ffffff;text-decoration:none;">
+        PT. Long Well International
+      </a>
+    </h1>
+  </header>
+
+  <nav class="navbar-primary">
+    <a th:href="@{/fig5}" th:classappend="${primary == 'FIG5'} ? 'active' : ''">FIG5</a>
+    <a th:href="@{/filw-on}" th:classappend="${primary == 'FILW-ON'} ? 'active' : ''">FILW-ON</a>
+    <a th:href="@{/filw-nb}" th:classappend="${primary == 'FILW-NB'} ? 'active' : ''">FILW-NB</a>
+  </nav>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+ /*<!-- ===== SECTION IT ===== -->*/       
+
+        body {
+          margin: 0;
+          font-family: 'Georgia', 'Times New Roman', serif;
+         }
+        .navbar {
+           background: #999;
+           display: flex;
+           padding: 5px 10px;
+           font-size: 12px;
+         }
+        .navbar div {
+           margin-right: 15px;
+           cursor: pointer;
+           user-select: none;
+         }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 100px); /* Kurangi tinggi header + footer */
+            overflow-x: auto;     /* agar bisa scroll horizontal */
+            overflow-y: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #eee;
+            padding: 10px;
+            overflow-y: auto;
+            overflow-x: auto;
+            font-size: 13px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction:column;
+            flex-shrink:0;
+            white-space: nowrap; 
+        }
+        .sidebar-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .sidebar-header h2 {
+        margin: 0;
+        font-size: 16px;
+        white-space: nowrap;
+         }
+
+        .search-box {
+            width: 120px;
+            height: 24px;
+            font-size: 12px;
+            padding: 3px 6px;
+            box-sizing: border-box;
+        }
+
+        .resizer {
+            width: 5px;
+            background: #ccc;
+            cursor: ew-resize;
+        }
+
+        .viewer {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .file-link {
+            cursor: pointer;
+            color: black;
+            white-space: nowrap;
+            display: inline-block;
+            max-width: 100%;
+            vertical-align: middle;
+          }
+
+
+        ul {
+            list-style: none;
+            padding-left: 15px;
+        }
+
+        ul ul {
+            padding-left: 20px;
+        }
+        
+        .folder-content {
+        border-left: 1px dotted #999;
+        margin-left: 12px;
+        padding-left: 15px;
+      }
+
+      .folder-content li {
+        position: relative;
+        padding-left: 20px;
+        margin: 5px 0;
+        white-space: nowrap; 
+      }
+
+      .folder-content li::before {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 0;
+        width: 12px;
+        height: 0;
+        border-top: 1px dotted #999;
+      }
+
+      .file-icon {
+        margin-right: 5px;
+      }
+      .hidden {
+        display: none !important;
+      }
+      /* === TREE VIEW GARIS TITIK-TITIK === */
+        .tree, .tree ul {
+          list-style: none;
+          padding-left: 0;
+          position: relative;
+          font-size: 13px;
+          margin: 0;
+        }
+
+        .tree ul {
+          margin-left: 5px;
+        }
+
+        .tree li {
+          position: relative;
+          padding-left: 10px;
+          margin: 2px 0;
+          white-space: nowrap; 
+        }
+
+        /* Garis vertikal */
+        .tree li::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          width: 1px;
+          border-left: 1px dotted #999;
+        }
+
+        /* Garis horizontal */
+        .tree li::after {
+          content: "";
+          position: absolute;
+          top: 12px;
+          left: 0;
+          width: 12px;
+          border-top: 1px dotted #999;
+        }
+
+        /* Hilangkan garis dari elemen paling atas */
+        .tree > li::before,
+        .tree > li::after {
+          display: none;
+        }
+        .hidden {
+            display: none !important;
+        }
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 8, 2025, 2:44:41 PM
+    Author     : LWPC-00115
+*/
+
