@@ -1,0 +1,11 @@
+<div th:fragment="secondaryFilwOn(active)">
+  <nav class="navbar-secondary">
+    <a th:href="@{/filw-on/am}" th:classappend="${active == 'AM'} ? 'active' : ''">AM</a>
+    <a th:href="@{/filw-on/ga}" th:classappend="${active == 'GA'} ? 'active' : ''">GA</a>
+    <a th:href="@{/filw-on/hrd}" th:classappend="${active == 'HRD'} ? 'active' : ''">HRD</a>
+    <a th:href="@{/filw-on/hse}" th:classappend="${active == 'HSE'} ? 'active' : ''">HSE</a>
+    <a th:href="@{/filw-on/vgm}" th:classappend="${active == 'VGM'} ? 'active' : ''">VGM</a>
+    <a th:href="@{/filw-on/assessment}" th:classappend="${active == 'ASSESSMENT'} ? 'active' : ''">ASSESSMENT</a>
+    <a th:href="@{/filw-on/factory}" th:classappend="${active == 'FACTORY'} ? 'active' : ''">FACTORY</a>
+  </nav>
+</div>

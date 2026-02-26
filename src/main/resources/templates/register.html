@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>FIG5 - PT. LWI</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="">
+
+     <!-- Navbar utama -->
+<div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
+
+
+
+ <!-- ===== HERO SECTION ===== -->
+   <h2>Register</h2>
+    <form th:action="@{/register}" method="post">
+        <label>Username:</label>
+        <input type="text" name="username" required><br>
+
+        <label>Password:</label>
+        <input type="password" name="password" required><br>
+
+        <label>Role:</label>
+        <select name="role" required>
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+        </select><br>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p th:text="${error}" style="color:red;"></p>
+    <p th:text="${success}" style="color:green;"></p>
+
+    <p>Sudah punya akun? <a th:href="@{/login}">Login di sini</a></p>
+
+    <!-- ===== FOOTER ===== -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

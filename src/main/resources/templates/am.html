@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title> FIG5 AM - PT. LWI</title>
+    <link rel="stylesheet" th:href="@{/css/it.css}">
+    <link rel="stylesheet" th:href="@{/css/fig5.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="${pageContext.request.contextPath}/">
+</head>
+<body>
+
+     <!-- Navbar utama -->
+<div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
+
+<!-- Navbar secondary FIG5 -->
+<div th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})"></div>
+    
+ <!-- ===== SECTION IT ===== -->
+ <div class="container">
+     <!-- Sidebar -->
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+  
+    <!-- Resizer -->
+    <div class="resizer" id="resizer"></div>
+  
+    <!-- Viewer -->
+    <div class="viewer">
+      <iframe id="pdfViewer"></iframe>
+    </div>
+ </div>
+  
+  <script src="/js/sidebar.js"></script>
+
+ <!-- ===== FOOTER ===== -->
+       <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

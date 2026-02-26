@@ -18,72 +18,100 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/it")
 public class Fig5ItController {
 
-  @GetMapping
-  public String itPage(Model model) throws IOException {
-    model.addAttribute("primary", "FIG5");
-    model.addAttribute("secondary", "IT");
+    @GetMapping
+    public String fig5itPage(Model model) throws IOException {
 
-    // Baca sidebar dari folder "pdfs/FIG5/EXIM"
-    model.addAttribute("sidebar", readSidebar("pdfs/FIG5/IT"));
+        model.addAttribute("primary", "FIG5");
+        model.addAttribute("secondary", "IT");
 
-    return "it"; // templates/exim.html
-  }
-
-  /* ======== helper ======== */
-
-  private Map<String, List<PdfItem>> readSidebar(String rootPath)
-    throws IOException {
-    Map<String, List<PdfItem>> result = new LinkedHashMap<>();
-
-    // Folder utama wajib ada
-    String[] folders = {
-      "CHART ORG",
-      "FROM",
-      "JOB DESC",
-      "PROCEDURE",
-      "STANDARD",
-    };
-
-    for (String folderName : folders) {
-      List<PdfItem> items = new ArrayList<>();
-
-      Resource folderResource = new ClassPathResource(
-        "static/" + rootPath + "/" + folderName
-      );
-      if (folderResource.exists()) {
-        File folderFile = folderResource.getFile();
-        items.addAll(
-          listPdfsRecursively(folderFile, "/" + rootPath + "/" + folderName)
+        model.addAttribute(
+            "sidebar",
+            readSidebarTwoLevel("pdfs/FIG5/IT")
         );
-      }
 
-      result.put(folderName, items);
+        return "it";
     }
 
-    return result;
-  }
+    /* =====================================
+       SIDEBAR 2 LEVEL (COCOK DENGAN JS LAMA)
+       ===================================== */
+    private Map<String, Map<String, List<PdfItem>>> readSidebarTwoLevel(String rootPath)
+        throws IOException {
 
-  // Fungsi rekursif untuk membaca folder dan file PDF
-  private List<PdfItem> listPdfsRecursively(File folder, String basePath) {
-    List<PdfItem> items = new ArrayList<>();
-    File[] files = folder.listFiles();
-    if (files != null) {
-      for (File f : files) {
-        if (f.isDirectory()) {
-          // Tambahkan folder sebagai item
-          items.add(
-            new PdfItem(f.getName(), basePath + "/" + f.getName(), true)
-          );
-          // Rekursi ke subfolder
-          items.addAll(listPdfsRecursively(f, basePath + "/" + f.getName()));
-        } else if (f.getName().toLowerCase().endsWith(".pdf")) {
-          // Tambahkan file PDF
-          items.add(
-            new PdfItem(f.getName(), basePath + "/" + f.getName(), false)
-          );
+        Map<String, Map<String, List<PdfItem>>> result = new LinkedHashMap<>();
+
+        String[] mainFolders = {
+            "CHART ORG",
+            "FORM",
+            "JOB DESC",
+            "PROCEDURE",
+            "STANDARD"
+        };
+
+        for (String main : mainFolders) {
+
+            Map<String, List<PdfItem>> subMap = new LinkedHashMap<>();
+
+            Resource mainRes =
+                new ClassPathResource("static/" + rootPath + "/" + main);
+
+            // Jika folder utama tidak ada
+            if (!mainRes.exists()) {
+                result.put(main, subMap);
+                continue;
+            }
+
+            File mainDir = mainRes.getFile();
+            File[] items = mainDir.listFiles();
+            if (items == null) {
+                result.put(main, subMap);
+                continue;
+            }
+
+            // FILE langsung di folder utama
+            List<PdfItem> rootFiles = new ArrayList<>();
+
+            for (File item : items) {
+
+                // SUBFOLDER (CUSTOM / IMPORT / EXPORT)
+                if (item.isDirectory()) {
+                    List<PdfItem> files = new ArrayList<>();
+                    scanPdf(item, rootPath + "/" + main + "/" + item.getName(), files);
+                    subMap.put(item.getName(), files);
+                }
+
+                // FILE LANGSUNG
+                if (item.isFile() && item.getName().toLowerCase().endsWith(".pdf")) {
+                    rootFiles.add(new PdfItem(
+                        item.getName(),
+                        "/" + rootPath + "/" + main + "/" + item.getName()
+                    ));
+                }
+            }
+
+            // File langsung masuk key khusus
+            if (!rootFiles.isEmpty()) {
+                subMap.put("__FILES__", rootFiles);
+            }
+
+            result.put(main, subMap);
         }
-      }
+
+        return result;
     }
-    return items;
-  }
+
+    private void scanPdf(File dir, String webPath, List<PdfItem> collector) {
+
+        File[] files = dir.listFiles();
+        if (files == null) return;
+
+        for (File f : files) {
+            if (f.isFile() && f.getName().toLowerCase().endsWith(".pdf")) {
+                collector.add(new PdfItem(
+                    f.getName(),
+                    "/" + webPath + "/" + f.getName()
+                ));
+            }
+        }
+    }
 }
