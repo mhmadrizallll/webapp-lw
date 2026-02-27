@@ -14,7 +14,20 @@
 <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
 <!-- Navbar secondary FIG5 -->
-<div th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})"></div>
+<!-- <div th:replace="fragments/navbar-secondary-fig5 :: 
+secondaryFig5(${secondary})"></div> -->
+
+<!-- Navbar FIG5 -->
+<div sec:authorize="hasRole('FIG5')"
+     th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})"></div>
+
+<!-- Navbar FILW_ON -->
+<div sec:authorize="hasRole('FILW_ON')"
+     th:replace="fragments/navbar-secondary-filw-on :: secondaryFilwOn(${secondary})"></div>
+
+<!-- Navbar FILW_NB -->
+<div sec:authorize="hasRole('FILW_NB')"
+     th:replace="fragments/navbar-secondary-filw-nb :: secondaryFilwNb(${secondary})"></div>
     
  <!-- ===== SECTION IT ===== -->
  <div class="container">

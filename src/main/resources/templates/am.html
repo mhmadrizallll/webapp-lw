@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="id">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title> FIG5 AM - PT. LWI</title>
@@ -9,13 +10,29 @@
     <base href="${pageContext.request.contextPath}/">
 </head>
 <body>
-
+    <!-- TEST ROLE USER LOGIN -->
+<!-- <p>Role user saat ini:</p>
+<ul>
+    <li sec:authorize="hasRole('FIG5')">FIG5 ✅</li>
+    <li sec:authorize="hasRole('FILW_ON')">FILW_ON ✅</li>
+    <li sec:authorize="hasRole('FILW_NB')">FILW_NB ✅</li>
+    <li sec:authorize="hasRole('ADMIN')">ADMIN ✅</li>
+</ul>
+ -->
      <!-- Navbar utama -->
 <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
-<!-- Navbar secondary FIG5 -->
-<div th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})"></div>
-    
+<!-- Navbar FIG5 -->
+<div sec:authorize="hasRole('FIG5')"
+     th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})"></div>
+
+<!-- Navbar FILW_ON -->
+<div sec:authorize="hasRole('FILW_ON')"
+     th:replace="fragments/navbar-secondary-filw-on :: secondaryFilwOn(${secondary})"></div>
+
+<!-- Navbar FILW_NB -->
+<div sec:authorize="hasRole('FILW_NB')"
+     th:replace="fragments/navbar-secondary-filw-nb :: secondaryFilwNb(${secondary})"></div>
  <!-- ===== SECTION IT ===== -->
  <div class="container">
      <!-- Sidebar -->

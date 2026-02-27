@@ -3,31 +3,69 @@ package com.example.web_app.controller.web;
 import com.example.web_app.model.PdfItem;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 @Controller
-@RequestMapping("/assessment")
 public class AssessmentController {
 
-    @GetMapping
-    public String assessmentPage(Model model) throws IOException {
+    @GetMapping("/{type}/assessment")
+    public String assessmentPage(
+            @PathVariable String type,
+            Authentication authentication,
+            Model model
+    ) throws IOException {
 
-        model.addAttribute("primary", "FIG5");
-        model.addAttribute("secondary", "ASSESSMENT");
+        String role = authentication.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority();
 
-        model.addAttribute(
-            "sidebar",
-            readSidebarTwoLevel("pdfs/FIG5/ASSESSMENT")
-        );
+        type = type.toLowerCase();
+
+        // ======================
+        // VALIDASI ROLE
+        // ======================
+        if (!role.equals("ADMIN")) {
+
+            if (role.equals("FIG5") && !type.equals("fig5")) {
+                return "redirect:/access-denied";
+            }
+
+            if (role.equals("FILW_ON") && !type.equals("filw-on")) {
+                return "redirect:/access-denied";
+            }
+
+            if (role.equals("FILW_NB") && !type.equals("filw-nb")) {
+                return "redirect:/access-denied";
+            }
+        }
+
+       // ======================
+// MODEL
+// ======================
+model.addAttribute("primary", type.toUpperCase());
+model.addAttribute("secondary", "ASSESSMENT");
+
+// TRUE hanya kalau FIG5
+// model.addAttribute("isFig5", type.equals("fig5"));
+
+// Role untuk navbar dinamis
+model.addAttribute("role", role);
+
+
+
+// Sidebar selalu ambil data dari FIG5/AM
+model.addAttribute(
+        "sidebar",
+        readSidebarTwoLevel("pdfs/FIG5/ASSESSMENT")
+);
 
         return "assessment";
     }
@@ -41,11 +79,9 @@ public class AssessmentController {
         Map<String, Map<String, List<PdfItem>>> result = new LinkedHashMap<>();
 
         String[] mainFolders = {
-            "CHART ORG",
-            "FORM",
-            "JOB DESC",
-            "PROCEDURE",
-            "STANDARD"
+            "APD",
+            "ASDAM",
+            "OFFICE",            
         };
 
         for (String main : mainFolders) {

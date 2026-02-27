@@ -139,6 +139,12 @@ nav a:hover {
     color: white;
 }
 
+
+.navbar-primary .nav-link.active {
+    background-color: #b71c1c;
+    color: #fff;
+}
+
 /* ===== FOOTER ===== */
 footer {
     background: #b71c1c;

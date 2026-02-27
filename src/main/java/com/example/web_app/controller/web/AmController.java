@@ -3,49 +3,87 @@ package com.example.web_app.controller.web;
 import com.example.web_app.model.PdfItem;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 @Controller
-@RequestMapping("/am")
 public class AmController {
 
-    @GetMapping
-    public String amPage(Model model) throws IOException {
+    @GetMapping("/{type}/am")
+    public String amPage(
+            @PathVariable String type,
+            Authentication authentication,
+            Model model
+    ) throws IOException {
 
-        model.addAttribute("primary", "FIG5");
-        model.addAttribute("secondary", "AM");
+        String role = authentication.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority();
 
-        model.addAttribute(
-            "sidebar",
-            readSidebarTwoLevel("pdfs/FIG5/AM")
-        );
+        type = type.toLowerCase();
+
+        // ======================
+        // VALIDASI ROLE
+        // ======================
+        if (!role.equals("ADMIN")) {
+
+            if (role.equals("FIG5") && !type.equals("fig5")) {
+                return "redirect:/access-denied";
+            }
+
+            if (role.equals("FILW_ON") && !type.equals("filw-on")) {
+                return "redirect:/access-denied";
+            }
+
+            if (role.equals("FILW_NB") && !type.equals("filw-nb")) {
+                return "redirect:/access-denied";
+            }
+        }
+
+       // ======================
+// MODEL
+// ======================
+model.addAttribute("primary", type.toUpperCase());
+model.addAttribute("secondary", "AM");
+
+// TRUE hanya kalau FIG5
+// model.addAttribute("isFig5", type.equals("fig5"));
+
+// Role untuk navbar dinamis
+model.addAttribute("role", role);
+
+
+
+// Sidebar selalu ambil data dari FIG5/AM
+model.addAttribute(
+        "sidebar",
+        readSidebarTwoLevel("pdfs/FIG5/AM")
+);
 
         return "am";
     }
 
-    /* =====================================
-       SIDEBAR 2 LEVEL (COCOK DENGAN JS LAMA)
-       ===================================== */
+    // ======================================
+    // SIDEBAR
+    // ======================================
     private Map<String, Map<String, List<PdfItem>>> readSidebarTwoLevel(String rootPath)
-        throws IOException {
+            throws IOException {
 
         Map<String, Map<String, List<PdfItem>>> result = new LinkedHashMap<>();
 
         String[] mainFolders = {
-            "CHART ORG",
-            "FORM",
-            "JOB DESC",
-            "PROCEDURE",
-            "STANDARD"
+                "CHART ORG",
+                "FORM",
+                "JOB DESC",
+                "PROCEDURE",
+                "STANDARD"
         };
 
         for (String main : mainFolders) {
@@ -53,9 +91,8 @@ public class AmController {
             Map<String, List<PdfItem>> subMap = new LinkedHashMap<>();
 
             Resource mainRes =
-                new ClassPathResource("static/" + rootPath + "/" + main);
+                    new ClassPathResource("static/" + rootPath + "/" + main);
 
-            // Jika folder utama tidak ada
             if (!mainRes.exists()) {
                 result.put(main, subMap);
                 continue;
@@ -68,28 +105,24 @@ public class AmController {
                 continue;
             }
 
-            // FILE langsung di folder utama
             List<PdfItem> rootFiles = new ArrayList<>();
 
             for (File item : items) {
 
-                // SUBFOLDER (CUSTOM / IMPORT / EXPORT)
                 if (item.isDirectory()) {
                     List<PdfItem> files = new ArrayList<>();
                     scanPdf(item, rootPath + "/" + main + "/" + item.getName(), files);
                     subMap.put(item.getName(), files);
                 }
 
-                // FILE LANGSUNG
                 if (item.isFile() && item.getName().toLowerCase().endsWith(".pdf")) {
                     rootFiles.add(new PdfItem(
-                        item.getName(),
-                        "/" + rootPath + "/" + main + "/" + item.getName()
+                            item.getName(),
+                            "/" + rootPath + "/" + main + "/" + item.getName()
                     ));
                 }
             }
 
-            // File langsung masuk key khusus
             if (!rootFiles.isEmpty()) {
                 subMap.put("__FILES__", rootFiles);
             }
@@ -108,8 +141,8 @@ public class AmController {
         for (File f : files) {
             if (f.isFile() && f.getName().toLowerCase().endsWith(".pdf")) {
                 collector.add(new PdfItem(
-                    f.getName(),
-                    "/" + webPath + "/" + f.getName()
+                        f.getName(),
+                        "/" + webPath + "/" + f.getName()
                 ));
             }
         }

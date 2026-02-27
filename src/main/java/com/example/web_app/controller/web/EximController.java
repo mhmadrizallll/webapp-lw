@@ -3,30 +3,62 @@ package com.example.web_app.controller.web;
 import com.example.web_app.model.PdfItem;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 @Controller
-@RequestMapping("/exim")
 public class EximController {
 
-    @GetMapping
-    public String eximPage(Model model) throws IOException {
+    @GetMapping("/{type}/exim")
+    public String eximPage(
+            @PathVariable String type,
+            Authentication authentication,
+            Model model
+    ) throws IOException {
 
-        model.addAttribute("primary", "FIG5");
+        String role = authentication.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority();
+
+        type = type.toLowerCase();
+
+        // ======================
+        // VALIDASI ROLE
+        // ======================
+        if (!role.equals("ADMIN")) {
+
+            if (role.equals("FIG5") && !type.equals("fig5")) {
+                return "redirect:/access-denied";
+            }
+
+            if (role.equals("FILW_ON") && !type.equals("filw-on")) {
+                return "redirect:/access-denied";
+            }
+
+            if (role.equals("FILW_NB") && !type.equals("filw-nb")) {
+                return "redirect:/access-denied";
+            }
+        }
+
+        // ======================
+        // MODEL
+        // ======================
+        model.addAttribute("primary", type.toUpperCase());
         model.addAttribute("secondary", "EXIM");
 
+        // TRUE hanya kalau FIG5
+        model.addAttribute("isFig5", type.equals("fig5"));
+
         model.addAttribute(
-            "sidebar",
-            readSidebarTwoLevel("pdfs/FIG5/EXIM")
+                "sidebar",
+                readSidebarTwoLevel("pdfs/" + type.toUpperCase() + "/EXIM")
         );
 
         return "exim";

@@ -108,6 +108,13 @@ nav a.active {
     border-radius: 3px;
 }
 
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 3px;
+}
+
 button {
     width: 100%;
     padding: 10px;
