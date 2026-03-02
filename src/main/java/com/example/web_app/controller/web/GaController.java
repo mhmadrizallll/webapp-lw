@@ -1,117 +1,110 @@
 package com.example.web_app.controller.web;
 
-import com.example.web_app.model.PdfItem;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.example.web_app.model.SidebarNode;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
-@RequestMapping("/ga")
 public class GaController {
 
-    @GetMapping
-    public String gaPage(Model model) throws IOException {
+    @GetMapping("/{type}/ga")
+    public String gaPage(
+            @PathVariable String type,
+            Authentication authentication,
+            Model model
+    ) throws IOException {
 
-        model.addAttribute("primary", "FIG5");
+        String role = authentication.getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority();
+
+        type = type.toLowerCase();
+
+        // ======================
+        // VALIDASI ROLE
+        // ======================
+        if (!role.equals("ADMIN")) {
+
+            if (role.equals("FIG5") && !type.equals("fig5")) {
+                return "redirect:/access-denied";
+            }
+
+            if (role.equals("FILW_ON") && !type.equals("filw-on")) {
+                return "redirect:/access-denied";
+            }
+
+            if (role.equals("FILW_NB") && !type.equals("filw-nb")) {
+                return "redirect:/access-denied";
+            }
+        }
+
+        // ======================
+        // MODEL
+        // ======================
+        model.addAttribute("primary", type.toUpperCase());
         model.addAttribute("secondary", "GA");
+        model.addAttribute("role", role);
 
+        // 🔥 FIX: sekarang dynamic sesuai type
         model.addAttribute(
-            "sidebar",
-            readSidebarTwoLevel("pdfs/FIG5/GA")
+                "sidebar",
+                buildTree("pdfs/" + type.toUpperCase() + "/GA")
         );
 
         return "ga";
     }
 
-    /* =====================================
-       SIDEBAR 2 LEVEL (COCOK DENGAN JS LAMA)
-       ===================================== */
-    private Map<String, Map<String, List<PdfItem>>> readSidebarTwoLevel(String rootPath)
-        throws IOException {
+    // ======================================
+    // RECURSIVE SIDEBAR BUILDER
+    // ======================================
+    private List<SidebarNode> buildTree(String rootPath) throws IOException {
 
-        Map<String, Map<String, List<PdfItem>>> result = new LinkedHashMap<>();
+        List<SidebarNode> nodes = new ArrayList<>();
 
-        String[] mainFolders = {
-            "CHART ORG",
-            "FORM",
-            "JOB DESC",
-            "PROCEDURE",
-            "STANDARD"
-        };
+        Resource resource = new ClassPathResource("static/" + rootPath);
+        if (!resource.exists()) return nodes;
 
-        for (String main : mainFolders) {
+        File rootDir = resource.getFile();
+        File[] files = rootDir.listFiles();
+        if (files == null) return nodes;
 
-            Map<String, List<PdfItem>> subMap = new LinkedHashMap<>();
+        for (File file : files) {
 
-            Resource mainRes =
-                new ClassPathResource("static/" + rootPath + "/" + main);
+            if (file.isDirectory()) {
 
-            // Jika folder utama tidak ada
-            if (!mainRes.exists()) {
-                result.put(main, subMap);
-                continue;
+                SidebarNode folderNode =
+                        new SidebarNode(file.getName(), true, null);
+
+                folderNode.getChildren().addAll(
+                        buildTree(rootPath + "/" + file.getName())
+                );
+
+                nodes.add(folderNode);
             }
 
-            File mainDir = mainRes.getFile();
-            File[] items = mainDir.listFiles();
-            if (items == null) {
-                result.put(main, subMap);
-                continue;
-            }
+            else if (file.isFile() &&
+                    file.getName().toLowerCase().endsWith(".pdf")) {
 
-            // FILE langsung di folder utama
-            List<PdfItem> rootFiles = new ArrayList<>();
-
-            for (File item : items) {
-
-                // SUBFOLDER (CUSTOM / IMPORT / EXPORT)
-                if (item.isDirectory()) {
-                    List<PdfItem> files = new ArrayList<>();
-                    scanPdf(item, rootPath + "/" + main + "/" + item.getName(), files);
-                    subMap.put(item.getName(), files);
-                }
-
-                // FILE LANGSUNG
-                if (item.isFile() && item.getName().toLowerCase().endsWith(".pdf")) {
-                    rootFiles.add(new PdfItem(
-                        item.getName(),
-                        "/" + rootPath + "/" + main + "/" + item.getName()
-                    ));
-                }
-            }
-
-            // File langsung masuk key khusus
-            if (!rootFiles.isEmpty()) {
-                subMap.put("__FILES__", rootFiles);
-            }
-
-            result.put(main, subMap);
-        }
-
-        return result;
-    }
-
-    private void scanPdf(File dir, String webPath, List<PdfItem> collector) {
-
-        File[] files = dir.listFiles();
-        if (files == null) return;
-
-        for (File f : files) {
-            if (f.isFile() && f.getName().toLowerCase().endsWith(".pdf")) {
-                collector.add(new PdfItem(
-                    f.getName(),
-                    "/" + webPath + "/" + f.getName()
-                ));
+                nodes.add(
+                        new SidebarNode(
+                                file.getName(),
+                                false,
+                                "/" + rootPath + "/" + file.getName()
+                        )
+                );
             }
         }
+
+        return nodes;
     }
 }

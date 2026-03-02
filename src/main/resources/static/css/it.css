@@ -181,3 +181,17 @@ and open the template in the editor.
     Author     : LWPC-00115
 */
 
+.folder-header {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.folder-header:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.hidden {
+  display: none;
+}

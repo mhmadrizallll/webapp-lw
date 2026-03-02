@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Informasi IT - PT. LWI</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/form_it.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+    <!-- Navbar utama -->
+    <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
+
+    <!-- ===== SECONDARY NAVIGATION ===== -->
+    <div th:replace="fragments/navbar-thirth :: navbarThirth(${thirth})"></div>
+
+    <!-- ===== HERO CONTENT + PDF VIEWER ===== -->
+    <section class="form-hero-gray">
+        <div class="hero-content">
+            <h2>Informasi IT</h2>
+            <p>Silahkan pilih informasi di atas untuk ditampilkan:</p>
+        </div>
+    </section>
+
+     <!-- ===== FOOTER ===== -->
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

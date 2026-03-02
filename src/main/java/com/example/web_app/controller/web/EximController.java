@@ -1,16 +1,17 @@
 package com.example.web_app.controller.web;
 
-import com.example.web_app.model.PdfItem;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
+import com.example.web_app.model.SidebarNode;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class EximController {
@@ -52,98 +53,58 @@ public class EximController {
         // ======================
         model.addAttribute("primary", type.toUpperCase());
         model.addAttribute("secondary", "EXIM");
+        model.addAttribute("role", role);
 
-        // TRUE hanya kalau FIG5
-        model.addAttribute("isFig5", type.equals("fig5"));
-
+        // 🔥 FIX: sekarang dynamic sesuai type
         model.addAttribute(
                 "sidebar",
-                readSidebarTwoLevel("pdfs/" + type.toUpperCase() + "/EXIM")
+                buildTree("pdfs/" + type.toUpperCase() + "/EXIM")
         );
 
         return "exim";
     }
 
-    /* =====================================
-       SIDEBAR 2 LEVEL (COCOK DENGAN JS LAMA)
-       ===================================== */
-    private Map<String, Map<String, List<PdfItem>>> readSidebarTwoLevel(String rootPath)
-        throws IOException {
+    // ======================================
+    // RECURSIVE SIDEBAR BUILDER
+    // ======================================
+    private List<SidebarNode> buildTree(String rootPath) throws IOException {
 
-        Map<String, Map<String, List<PdfItem>>> result = new LinkedHashMap<>();
+        List<SidebarNode> nodes = new ArrayList<>();
 
-        String[] mainFolders = {
-            "CHART ORG",
-            "FORM",
-            "JOB DESC",
-            "PROCEDURE",
-            "STANDARD"
-        };
+        Resource resource = new ClassPathResource("static/" + rootPath);
+        if (!resource.exists()) return nodes;
 
-        for (String main : mainFolders) {
+        File rootDir = resource.getFile();
+        File[] files = rootDir.listFiles();
+        if (files == null) return nodes;
 
-            Map<String, List<PdfItem>> subMap = new LinkedHashMap<>();
+        for (File file : files) {
 
-            Resource mainRes =
-                new ClassPathResource("static/" + rootPath + "/" + main);
+            if (file.isDirectory()) {
 
-            // Jika folder utama tidak ada
-            if (!mainRes.exists()) {
-                result.put(main, subMap);
-                continue;
+                SidebarNode folderNode =
+                        new SidebarNode(file.getName(), true, null);
+
+                folderNode.getChildren().addAll(
+                        buildTree(rootPath + "/" + file.getName())
+                );
+
+                nodes.add(folderNode);
             }
 
-            File mainDir = mainRes.getFile();
-            File[] items = mainDir.listFiles();
-            if (items == null) {
-                result.put(main, subMap);
-                continue;
-            }
+            else if (file.isFile() &&
+                    file.getName().toLowerCase().endsWith(".pdf")) {
 
-            // FILE langsung di folder utama
-            List<PdfItem> rootFiles = new ArrayList<>();
-
-            for (File item : items) {
-
-                // SUBFOLDER (CUSTOM / IMPORT / EXPORT)
-                if (item.isDirectory()) {
-                    List<PdfItem> files = new ArrayList<>();
-                    scanPdf(item, rootPath + "/" + main + "/" + item.getName(), files);
-                    subMap.put(item.getName(), files);
-                }
-
-                // FILE LANGSUNG
-                if (item.isFile() && item.getName().toLowerCase().endsWith(".pdf")) {
-                    rootFiles.add(new PdfItem(
-                        item.getName(),
-                        "/" + rootPath + "/" + main + "/" + item.getName()
-                    ));
-                }
-            }
-
-            // File langsung masuk key khusus
-            if (!rootFiles.isEmpty()) {
-                subMap.put("__FILES__", rootFiles);
-            }
-
-            result.put(main, subMap);
-        }
-
-        return result;
-    }
-
-    private void scanPdf(File dir, String webPath, List<PdfItem> collector) {
-
-        File[] files = dir.listFiles();
-        if (files == null) return;
-
-        for (File f : files) {
-            if (f.isFile() && f.getName().toLowerCase().endsWith(".pdf")) {
-                collector.add(new PdfItem(
-                    f.getName(),
-                    "/" + webPath + "/" + f.getName()
-                ));
+                nodes.add(
+                        new SidebarNode(
+                                file.getName(),
+                                false,
+                                "/" + rootPath + "/" + file.getName()
+                        )
+                );
             }
         }
+
+        return nodes;
     }
 }

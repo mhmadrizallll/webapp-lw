@@ -14,22 +14,30 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+
+            // 🔥 TAMBAHKAN INI
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.disable())
+            )
+
             .authorizeHttpRequests(auth -> auth
 
-                // ✅ ROOT PUBLIC
                     .requestMatchers("/").permitAll()
 
-                    //  PUBLIC LAIN
-                    .requestMatchers("/auth/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
+                    .requestMatchers("/auth/register", "/login", "/informasi_it",
+                            "/form_it","/petunjuk_it", "/prosedur_it",
+                            "/telepon_extension", "/daily_report",
+                            "/css/**", "/js/**", "/images/**",
+                            "/pdfs/**", "/pdfjs/**"
+                    ).permitAll()
 
-                    // ✅ ROLE BASED
                     .requestMatchers("/fig5/**").hasAnyRole("FIG5", "ADMIN")
                     .requestMatchers("/filw-nb/**").hasAnyRole("FILW_NB", "ADMIN")
                     .requestMatchers("/filw-on/**").hasAnyRole("FILW_ON", "ADMIN")
 
-                    // ✅ selain itu harus login
                     .anyRequest().authenticated()
             )
+
             .formLogin(form -> form
                 .loginPage("/login")
                 .successHandler((request, response, authentication) -> {
@@ -49,7 +57,7 @@ public class SecurityConfig {
                 })
                 .permitAll()
             )
-            // 🔥 INI BAGIAN PENTING
+
             .exceptionHandling(ex -> ex
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
 
@@ -75,7 +83,6 @@ public class SecurityConfig {
                 })
             )
 
-
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
@@ -86,6 +93,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

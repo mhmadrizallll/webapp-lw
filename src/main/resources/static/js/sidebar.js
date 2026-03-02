@@ -6,35 +6,43 @@ document.addEventListener("DOMContentLoaded", function () {
   const MIN = 150, MAX = 900;
 
   // ===========================
-  // 🔹 Section & Folder State
+  // 🔹 Section Helper
   // ===========================
   function getCurrentSection() {
     const params = new URLSearchParams(window.location.search);
     return params.get('secondary') || 'UNKNOWN';
   }
 
+  // ===========================
+  // 🔹 Save & Restore Folder State
+  // ===========================
   function saveOpenFolders() {
     const openFolders = [];
-    document.querySelectorAll('.tree ul:not(.hidden)').forEach(folder => {
-      openFolders.push(folder.id);
+
+    document.querySelectorAll('.tree ul').forEach((ul, index) => {
+      if (!ul.classList.contains('hidden')) {
+        openFolders.push(index);
+      }
     });
+
     const section = getCurrentSection();
     localStorage.setItem(`openFolders_${section}`, JSON.stringify(openFolders));
   }
 
   function restoreOpenFolders() {
     const section = getCurrentSection();
-    const openFolders = JSON.parse(localStorage.getItem(`openFolders_${section}`) || '[]');
-    openFolders.forEach(id => {
-      const ul = document.getElementById(id);
-      if (ul) {
+    const openFolders = JSON.parse(
+      localStorage.getItem(`openFolders_${section}`) || '[]'
+    );
+
+    document.querySelectorAll('.tree ul').forEach((ul, index) => {
+      if (openFolders.includes(index)) {
         ul.classList.remove('hidden');
-        document.querySelectorAll(`[data-target="${id}"]`).forEach(t => t.classList.add('open'));
       }
     });
   }
 
-  // Jika berpindah section, reset folder sebelumnya
+  // Reset jika pindah section
   const current = getCurrentSection();
   const last = localStorage.getItem('lastSection');
   if (last && last !== current) {
@@ -42,85 +50,85 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   localStorage.setItem('lastSection', current);
 
-  // ===========================
-  // 🔹 Toggle Folder
-  // ===========================
-  document.querySelectorAll('.folder-toggle').forEach(toggle => {
-    const targetId = toggle.dataset.target;
-    const content = document.getElementById(targetId);
-    if (!content) return;
-
-    if (!content.classList.contains('hidden')) toggle.classList.add('open');
-
-    toggle.addEventListener('click', () => {
-      const isHidden = content.classList.toggle('hidden');
-      toggle.classList.toggle('open', !isHidden);
-      saveOpenFolders();
-    });
-  });
-
   restoreOpenFolders();
 
   // ===========================
-  // 🔹 File Click
+  // 🔹 CLICK HANDLER (FOLDER + FILE)
   // ===========================
-  document.querySelectorAll('.file-link').forEach(link => {
-    link.addEventListener('click', () => {
-      const filePath = link.getAttribute('data-file');
-      if (!filePath) return alert("File tidak ditemukan!");
-      
-      // viewer path relatif
-      const fullPath = `../../${filePath}`;
-      const encoded = encodeURIComponent(fullPath);
+  document.addEventListener('click', function (e) {
 
-      if (viewer) viewer.src = `pdfjs/web/viewer.html?file=${encoded}`;
-    });
+    // ===== Folder Toggle =====
+    const toggle = e.target.closest('.folder-toggle');
+    if (toggle) {
+
+      const container = toggle.parentElement;
+      const content = container.querySelector('ul');
+      if (!content) return;
+
+      const isHidden = content.classList.toggle('hidden');
+      toggle.classList.toggle('open', !isHidden);
+
+      saveOpenFolders();
+      return;
+    }
+
+    // ===== File Click =====
+    if (e.target.classList.contains('file-link')) {
+
+      const filePath = e.target.getAttribute('data-file');
+      if (!filePath) {
+        alert("File tidak ditemukan!");
+        return;
+      }
+
+      // 🔥 PAKAI PATH ASLI DARI CONTROLLER
+      const encoded = encodeURIComponent(filePath);
+
+      if (viewer) {
+        viewer.src = `/pdfjs/web/viewer.html?file=${encoded}`;
+      }
+
+    }
+
   });
 
   // ===========================
-  // 🔹 Search Filter
+  // 🔹 Search Recursive
   // ===========================
   const searchInput = document.querySelector('.search-box');
+
   searchInput?.addEventListener('input', function () {
+
     const query = this.value.toLowerCase();
-    document.querySelectorAll('.filterable-item').forEach(block => {
-      const ul = block.querySelector('ul');
-      const toggles = block.querySelectorAll('.folder-toggle');
+
+    document.querySelectorAll('.tree li').forEach(li => {
 
       if (!query) {
-        block.style.display = '';
-        ul?.querySelectorAll('li').forEach(li => li.style.display = '');
+        li.style.display = '';
         restoreOpenFolders();
         return;
       }
 
-      let matched = block.textContent.toLowerCase().includes(query);
-      if (ul) {
-        let hasVisibleChild = false;
-        ul.querySelectorAll('li').forEach(li => {
-          const link = li.querySelector('.file-link');
-          const isMatch = link?.textContent.toLowerCase().includes(query);
-          li.style.display = isMatch ? '' : 'none';
-          if (isMatch) hasVisibleChild = true;
-        });
-        matched = matched || hasVisibleChild;
-        if (matched) {
-          ul.classList.remove('hidden');
-          toggles.forEach(t => t.classList.add('open'));
-        } else {
-          ul.classList.add('hidden');
-          toggles.forEach(t => t.classList.remove('open'));
+      const text = li.textContent.toLowerCase();
+      const matched = text.includes(query);
+
+      li.style.display = matched ? '' : 'none';
+
+      if (matched) {
+        let parent = li.closest('ul');
+        while (parent && parent.classList.contains('hidden')) {
+          parent.classList.remove('hidden');
+          parent = parent.parentElement.closest('ul');
         }
       }
 
-      block.style.display = matched ? '' : 'none';
     });
 
     saveOpenFolders();
   });
 
   // ===========================
-  // 🔹 Drag Sidebar
+  // 🔹 Drag Sidebar Resize
   // ===========================
   let startX = 0, startW = 0, overlay = null;
   const saved = +localStorage.getItem('sidebarWidth');
@@ -155,13 +163,21 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener('touchend', endDrag, true);
 
     document.body.classList.add('dragging');
+
     if (viewer) viewer.style.pointerEvents = 'none';
+
     overlay = document.createElement('div');
     overlay.className = 'drag-overlay';
     document.body.appendChild(overlay);
   }
 
-  resizer?.addEventListener('mousedown', e => { e.preventDefault(); beginDrag(e.clientX); });
-  resizer?.addEventListener('touchstart', e => beginDrag(e.touches[0].clientX), { passive: true });
+  resizer?.addEventListener('mousedown', e => {
+    e.preventDefault();
+    beginDrag(e.clientX);
+  });
+
+  resizer?.addEventListener('touchstart', e => {
+    beginDrag(e.touches[0].clientX);
+  }, { passive: true });
 
 });

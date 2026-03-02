@@ -1,0 +1,169 @@
+/* ===== RESET DASAR ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background-color: #ffffff;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+header {
+    background-color: #b71c1c;
+    color: white;
+    padding: 24px 0 14px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+header h1 {
+    font-size: 26px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ===== NAVIGASI UTAMA ===== */
+nav {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+nav a {
+    color: #222;
+    font-weight: bold;
+    font-size: 15px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #b71c1c;
+    color: #fff;
+}
+
+/* ===== NAVIGASI KEDUA ===== */
+.navbar-secondary {
+    background-color: #d3d3d3;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.navbar-secondary a {
+    color: #222;
+    font-weight: bold;
+    font-size: 15px;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.navbar-secondary a:hover {
+    background-color: #b71c1c;
+    color: white;
+}
+
+.navbar-secondary a.active {
+    background-color: #b71c1c;
+    color: white;
+}
+
+/* ===== SECTION PROSEDUR IT ===== */
+.hero-gray {
+    text-align: center;
+    padding: 40px 20px 30px;
+    background-color: #f0f0f0;
+    color: black;
+    flex: 1;
+    position: relative;
+}
+
+.hero-gray h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.hero-gray p {
+    font-size: 15px;
+    margin-bottom: 42px; /* jarak 1 paragraf penuh */
+}
+
+/* ===== BUTTON PDF ===== */
+.text-container {
+    margin-top: 20px;
+}
+
+.text-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.text-container li {
+    margin-bottom: 10px;
+}
+
+.text-container a {
+    display: block;
+    text-decoration: none;
+    font-size: 15px;
+    background-color: #f2f2f2;
+    padding: 12px 28px;
+    color: #b71c1c;
+    border-radius: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.text-container a:hover {
+    background-color: #b71c1c;
+    color: white;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== PDF VIEWER (optional) ===== */
+.pdf-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    height: 400px;
+    overflow: hidden;
+    background-color: white;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    background: #b71c1c;
+    color: white;
+    text-align: center;
+    padding: 16px 0;
+    font-size: 14px;
+    margin-top: auto;
+}

@@ -14,7 +14,9 @@
 <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
 <!-- Navbar secondary FIG5 -->
-<!-- <div th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})"></div> -->
+<!-- <div th:replace="fragments/navbar-secondary-fig5 :: 
+secondaryFig5(${secondary})"></div> -->
+
 <!-- Navbar FIG5 -->
 <div sec:authorize="hasRole('FIG5')"
      th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})"></div>

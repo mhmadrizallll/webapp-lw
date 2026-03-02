@@ -3,82 +3,53 @@
 <body>
 
 <div th:fragment="sidebar">
-  <div class="sidebar" id="sidebar">
+    <div class="sidebar" id="sidebar">
 
-    <div class="sidebar-header">
-      <h2>Dokumen [[${secondary}]]</h2>
-      <input type="text" placeholder="Search" class="search-box" />
+        <div class="sidebar-header">
+            <h2>Dokumen [[${secondary}]]</h2>
+            <input type="text" placeholder="Search" class="search-box" />
+        </div>
+
+        <ul class="tree">
+            <li th:each="node : ${sidebar}">
+                <div th:replace="fragments/sidebar :: treeNode(${node})"></div>
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+<!-- ============================= -->
+<!-- RECURSIVE NODE -->
+<!-- ============================= -->
+<div th:fragment="treeNode(node)">
+
+    <!-- ===== FOLDER ===== -->
+    <div th:if="${node.folder}">
+        <div class="folder-header folder-toggle">
+            <span class="icon">📂</span>
+            <span class="folder-name" style="font-weight: bold;" th:text="${node.name}"></span>
+        </div>
+
+        <ul class="hidden">
+            <li th:each="child : ${node.children}">
+                <div th:replace="fragments/sidebar :: treeNode(${child})"></div>
+            </li>
+
+            <li th:if="${node.children.size() == 0}">
+                <span>file belum ada, next update...</span>
+            </li>
+        </ul>
     </div>
 
-    <ul class="tree">
+    <!-- ===== FILE ===== -->
+    <div th:if="${!node.folder}">
+        <span class="file-icon">📄</span>
+        <span class="file-link"
+              th:attr="data-file=${node.path}"
+              th:text="${node.name}"></span>
+    </div>
 
-      <!-- FOLDER UTAMA -->
-      <li th:each="entry : ${sidebar}" class="filterable-item">
-
-        <span class="folder-toggle"
-              th:attr="data-target=${entry.key}">📂</span>
-
-        <label class="folder-toggle"
-               th:attr="data-target=${entry.key}">
-          <b th:text="${entry.key}"></b>
-        </label>
-
-        <ul th:id="${entry.key}" class="hidden">
-
-          <!-- SUBFOLDER -->
-          <li th:each="sub : ${entry.value}"
-              th:if="${sub.key != '__FILES__'}">
-
-            <span class="folder-toggle"
-                  th:attr="data-target=${entry.key + '-' + sub.key}">📂</span>
-
-            <label class="folder-toggle"
-                   th:attr="data-target=${entry.key + '-' + sub.key}">
-              <b th:text="${sub.key}"></b>
-            </label>
-
-            <ul th:id="${entry.key + '-' + sub.key}" class="hidden">
-
-              <!-- FILE -->
-              <li th:each="pdf : ${sub.value}">
-                <span class="file-icon">📄</span>
-                <span class="file-link"
-                      th:attr="data-file=${pdf.path}"
-                      th:text="${pdf.name}"></span>
-              </li>
-
-              <!-- JIKA SUBFOLDER KOSONG -->
-              <li th:if="${sub.value.size() == 0}">
-                <span class="file-icon">📄</span>
-                <span class="file-link">
-                  file belum ada, next update...
-                </span>
-              </li>
-
-            </ul>
-          </li>
-
-          <!-- FILE LANGSUNG DI FOLDER UTAMA -->
-          <li th:each="pdf : ${entry.value['__FILES__']}">
-            <span class="file-icon">📄</span>
-            <span class="file-link"
-                  th:attr="data-file=${pdf.path}"
-                  th:text="${pdf.name}"></span>
-          </li>
-
-          <!-- JIKA FOLDER UTAMA KOSONG TOTAL -->
-          <li th:if="${entry.value.size() == 0}">
-            <span class="file-icon">📄</span>
-            <span class="file-link">
-              file belum ada, next update...
-            </span>
-          </li>
-
-        </ul>
-      </li>
-
-    </ul>
-  </div>
 </div>
 
 </body>
