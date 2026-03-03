@@ -43,11 +43,47 @@
     </div>
 
     <!-- ===== FILE ===== -->
-    <div th:if="${!node.folder}">
-        <span class="file-icon">📄</span>
+    <div th:if="${!node.folder}" class="file-item">
+
+        <span class="file-icon" 
+              th:if="${#strings.endsWith(node.name.toLowerCase(), '.pdf')}">
+            <img width="20" height="20" src="https://img.icons8.com/color/50/pdf.png" alt="pdf"/>
+        </span>
+
+        <span class="file-icon" 
+              th:if="${#strings.endsWith(node.name.toLowerCase(), '.doc') 
+                      or #strings.endsWith(node.name.toLowerCase(), '.docx')}">
+            <img width="20" height="20" src="https://img.icons8.com/color/50/ms-word.png" alt="ms-word"/>
+        </span>
+
+        <span class="file-icon" 
+              th:if="${#strings.endsWith(node.name.toLowerCase(), '.xls') 
+                      or #strings.endsWith(node.name.toLowerCase(), '.xlsx')}">
+            <img width="20" height="20" src="https://img.icons8.com/color/48/ms-excel.png" alt="ms-excel"/>
+        </span>
+
+        <span class="file-icon" 
+              th:if="${#strings.endsWith(node.name.toLowerCase(), '.ppt') 
+                      or #strings.endsWith(node.name.toLowerCase(), '.pptx')}">
+            <img width="20" height="20" src="https://img.icons8.com/color/50/ms-powerpoint.png" alt="ms-powerpoint"/>
+        </span>
+
+        <span class="file-icon" 
+              th:if="${!(#strings.endsWith(node.name.toLowerCase(), '.pdf')
+                      or #strings.endsWith(node.name.toLowerCase(), '.doc')
+                      or #strings.endsWith(node.name.toLowerCase(), '.docx')
+                      or #strings.endsWith(node.name.toLowerCase(), '.xls')
+                      or #strings.endsWith(node.name.toLowerCase(), '.xlsx')
+                      or #strings.endsWith(node.name.toLowerCase(), '.ppt')
+                      or #strings.endsWith(node.name.toLowerCase(), '.pptx'))}">
+            📄
+        </span>
+
         <span class="file-link"
               th:attr="data-file=${node.path}"
-              th:text="${node.name}"></span>
+              th:text="${node.name}">
+        </span>
+
     </div>
 
 </div>

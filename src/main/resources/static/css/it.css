@@ -24,6 +24,7 @@
         }
 
         .sidebar {
+            height: 100%;
             width: 300px;
             background: #eee;
             padding: 10px;
@@ -36,6 +37,9 @@
             flex-shrink:0;
             white-space: nowrap; 
         }
+
+
+
         .sidebar-header{
             display: flex;
             justify-content: space-between;
@@ -194,4 +198,23 @@ and open the template in the editor.
 
 .hidden {
   display: none;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;   /* 🔥 bikin sejajar vertikal */
+  gap: 6px;
+}
+
+.file-icon img {
+  display: block;        /* hilangkan spasi aneh */
+}
+
+.file-link {
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.file-item:hover {
+  background: rgba(0,0,0,0.05);
 }

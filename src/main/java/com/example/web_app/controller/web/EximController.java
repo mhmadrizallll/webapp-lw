@@ -1,27 +1,30 @@
 package com.example.web_app.controller.web;
 
 import com.example.web_app.model.SidebarNode;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class EximController {
 
+    // Folder sejajar dengan project
+    private final String BASE_DIR = "../";
+
+    // ==========================================
+    // HRD PAGE
+    // ==========================================
     @GetMapping("/{type}/exim")
     public String eximPage(
             @PathVariable String type,
             Authentication authentication,
             Model model
-    ) throws IOException {
+    ) {
 
         String role = authentication.getAuthorities()
                 .iterator()
@@ -48,33 +51,31 @@ public class EximController {
             }
         }
 
-        // ======================
-        // MODEL
-        // ======================
         model.addAttribute("primary", type.toUpperCase());
         model.addAttribute("secondary", "EXIM");
         model.addAttribute("role", role);
 
-        // 🔥 FIX: sekarang dynamic sesuai type
         model.addAttribute(
                 "sidebar",
-                buildTree("pdfs/" + type.toUpperCase() + "/EXIM")
+                buildTree(type + "/EXIM")
         );
 
         return "exim";
     }
 
-    // ======================================
-    // RECURSIVE SIDEBAR BUILDER
-    // ======================================
-    private List<SidebarNode> buildTree(String rootPath) throws IOException {
+    // ==========================================
+    // BUILD SIDEBAR TREE (RECURSIVE)
+    // ==========================================
+    private List<SidebarNode> buildTree(String rootPath) {
 
         List<SidebarNode> nodes = new ArrayList<>();
 
-        Resource resource = new ClassPathResource("static/" + rootPath);
-        if (!resource.exists()) return nodes;
+        File rootDir = new File(BASE_DIR + rootPath);
 
-        File rootDir = resource.getFile();
+        if (!rootDir.exists() || !rootDir.isDirectory()) {
+            return nodes;
+        }
+
         File[] files = rootDir.listFiles();
         if (files == null) return nodes;
 
@@ -92,8 +93,7 @@ public class EximController {
                 nodes.add(folderNode);
             }
 
-            else if (file.isFile() &&
-                    file.getName().toLowerCase().endsWith(".pdf")) {
+            else if (file.isFile() && isSupportedFile(file.getName())) {
 
                 nodes.add(
                         new SidebarNode(
@@ -106,5 +106,21 @@ public class EximController {
         }
 
         return nodes;
+    }
+
+    // ==========================================
+    // SUPPORTED FILE TYPES
+    // ==========================================
+    private boolean isSupportedFile(String fileName) {
+
+        String lower = fileName.toLowerCase();
+
+        return lower.endsWith(".pdf")
+                || lower.endsWith(".doc")
+                || lower.endsWith(".docx")
+                || lower.endsWith(".xls")
+                || lower.endsWith(".xlsx")
+                || lower.endsWith(".ppt")
+                || lower.endsWith(".pptx");
     }
 }

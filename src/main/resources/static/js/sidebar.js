@@ -57,13 +57,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // ===========================
   document.addEventListener('click', function (e) {
 
-    // ===== Folder Toggle =====
+    // ===== Folder Toggle FIXED =====
     const toggle = e.target.closest('.folder-toggle');
     if (toggle) {
 
-      const container = toggle.parentElement;
-      const content = container.querySelector('ul');
-      if (!content) return;
+      // Ambil UL tepat setelah folder-header
+      const content = toggle.nextElementSibling;
+
+      if (!content || content.tagName !== 'UL') return;
 
       const isHidden = content.classList.toggle('hidden');
       toggle.classList.toggle('open', !isHidden);
@@ -73,21 +74,33 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ===== File Click =====
-    if (e.target.classList.contains('file-link')) {
+    const fileElement = e.target.closest('.file-link');
+    if (fileElement) {
 
-      const filePath = e.target.getAttribute('data-file');
+      const filePath = fileElement.getAttribute('data-file');
       if (!filePath) {
         alert("File tidak ditemukan!");
         return;
       }
 
-      // 🔥 PAKAI PATH ASLI DARI CONTROLLER
-      const encoded = encodeURIComponent(filePath);
+      const extension = filePath.split('.').pop().toLowerCase();
 
-      if (viewer) {
-        viewer.src = `/pdfjs/web/viewer.html?file=${encoded}`;
+      // ===== Jika PDF → buka di PDFJS =====
+      if (extension === "pdf") {
+
+        const encoded = encodeURIComponent(filePath);
+
+        if (viewer) {
+          viewer.src = `/pdfjs/web/viewer.html?file=${encoded}`;
+        }
       }
 
+      // ===== Selain PDF → langsung download =====
+      else {
+        window.location.href = `/download?path=${encodeURIComponent(filePath)}`;
+      }
+
+      return;
     }
 
   });

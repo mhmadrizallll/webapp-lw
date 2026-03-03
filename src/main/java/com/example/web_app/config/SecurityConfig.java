@@ -24,7 +24,11 @@ public class SecurityConfig {
 
                     .requestMatchers("/").permitAll()
 
-                    .requestMatchers("/auth/register", "/login", "/informasi_it",
+                    .requestMatchers("/login").permitAll()
+
+                    .requestMatchers("/auth/register").hasRole("ADMIN")
+
+                    .requestMatchers("/informasi_it",
                             "/form_it","/petunjuk_it", "/prosedur_it",
                             "/telepon_extension", "/daily_report",
                             "/css/**", "/js/**", "/images/**",

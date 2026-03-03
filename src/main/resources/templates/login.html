@@ -32,12 +32,6 @@
         </form>
     </div>
 </section>
-<div style="text-align: center;">
-    <p th:text="${error}" style="color:red;"></p>
-        <p th:text="${success}" style="color:green;"></p>
-
-        <p>Belum punya akun? <a th:href="@{/auth/register}">Daftar di sini</a></p>
-</div>
 
     <!-- ===== FOOTER ===== -->
     <div th:replace="fragments/footer :: footer"></div>
