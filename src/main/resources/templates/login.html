@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>LOGIN - PT. LWI</title>
     <link rel="stylesheet" th:href="@{/css/login.css}">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body class="">
@@ -13,6 +12,10 @@
 <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
 
+
+<div th:if="${customMessage}" class="alert alert-success">
+    <span th:text="${customMessage}"></span>
+</div>
 
  <!-- ===== HERO SECTION ===== -->
     <section class="hero">
@@ -32,7 +35,23 @@
         </form>
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script th:if="${customError}" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const errorMessage = /*[[${customError}]]*/ "";
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Akses Ditolak',
+            text: errorMessage,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+
+    });
+</script>
     <!-- ===== FOOTER ===== -->
     <div th:replace="fragments/footer :: footer"></div>
 

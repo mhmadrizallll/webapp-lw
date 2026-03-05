@@ -24,7 +24,7 @@
              <div class="text-container">
                 <ul>
                     <li th:each="file : ${files}">
-                        <a th:href="@{'/pdfs/FORM-IT/' + ${file}}"
+                        <a th:href="@{'/pdfs/PETUNJUK-IT/' + ${file}}"
                            th:text="${#strings.replace(file, '.pdf', '')}"
                            target="_blank">
                         </a>
