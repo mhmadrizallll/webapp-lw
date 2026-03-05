@@ -1,59 +1,79 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>LOGIN - PT. LWI</title>
     <link rel="stylesheet" th:href="@{/css/login.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body class="">
 
-     <!-- Navbar utama -->
-<div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
+    <!-- Navbar utama -->
+    <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
-
-
-<div th:if="${customMessage}" class="alert alert-success">
-    <span th:text="${customMessage}"></span>
-</div>
-
- <!-- ===== HERO SECTION ===== -->
-    <section class="hero">
-    <div class="login-box">
-        <h2>LOGIN</h2>
-        <form th:action="@{/login}" method="post" >
-            <div class="form-group">
-                <label for="username">User ID</label>
-                <input type="text" name="username" id="username" required />
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" required />
-            </div>
-            
-            <button type="submit">Log in</button>
-        </form>
+    <div th:if="${customMessage}" class="alert alert-success">
+        <span th:text="${customMessage}"></span>
     </div>
-</section>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script th:if="${customError}" th:inline="javascript">
-    document.addEventListener("DOMContentLoaded", function () {
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero">
+        <div class="login-box">
+            <h2>LOGIN</h2>
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" required />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required />
+                </div>                 
 
-        const errorMessage = /*[[${customError}]]*/ "";
+                <button type="submit">Log in</button>
+                <!-- ERROR LOGIN -->
+                <!-- <div th:if="${param.error}" style="color:red; font-size:14px; margin-top:8px; background-color: aliceblue;">
+                    Username atau password salah
+                </div> -->
+            </form>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        Swal.fire({
-            icon: 'error',
-            title: 'Akses Ditolak',
-            text: errorMessage,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK'
+    <script th:if="${customError}" th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const errorMessage = /*[[${customError}]]*/ "";
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: errorMessage,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+
         });
+    </script>
+    <script th:if="${param.error}" th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
 
-    });
-</script>
+            const errorMessage = /*[[${param.error}]]*/ "";
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: "Username atau password salah",
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+
+        });
+    </script>
     <!-- ===== FOOTER ===== -->
     <div th:replace="fragments/footer :: footer"></div>
 
 </body>
+
 </html>

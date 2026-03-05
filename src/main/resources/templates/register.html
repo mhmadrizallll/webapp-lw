@@ -1,60 +1,61 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>FIG5 - PT. LWI</title>
     <link rel="stylesheet" th:href="@{/css/login.css}">
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body class="">
 
-     <!-- Navbar utama -->
-<div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
+    <!-- Navbar utama -->
+    <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
-
-
- <!-- ===== HERO SECTION ===== -->
-  <section class="hero">       
-       <div class="login-box">
-            <h2>Register</h2>   
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero">
+        <div class="login-box">
+            <h2>Register</h2>
             <form th:action="@{/auth/register}" method="post">
-            <div class="form-group">
+                <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" name="username" id="username" required />
                 </div>
 
-             <div class="form-group">
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" name="password" id="password" required />
                 </div>
 
-             <div class="form-group">
+                <div class="form-group">
                     <label for="role">Role</label>
-                     <select name="role">
+                    <select name="role">
                         <option value="ADMIN">ADMIN</option>
                         <option value="FIG5">FIG5</option>
                         <option value="FILW_NB">FILW-NB</option>
                         <option value="FILW_ON">FILW-ON</option>
                     </select>
                 </div>
-            <br/>
+                <br />
 
-            <button type="submit">Register</button>
-        </form>
-       </div>
+                <button type="submit">Register</button>
+            </form>
+        </div>
 
-    </section>  
-<div style="text-align: center;">
-    <p th:text="${error}" style="color:red;"></p>
+    </section>
+    <div style="text-align: center;">
+        <p th:text="${error}" style="color:red;"></p>
         <p th:text="${success}" style="color:green;"></p>
 
         <p>Sudah punya akun? <a th:href="@{/login}">Login di sini</a></p>
-</div>
-    
+    </div>
+
 
     <!-- ===== FOOTER ===== -->
     <div th:replace="fragments/footer :: footer"></div>
 
 </body>
+
 </html>

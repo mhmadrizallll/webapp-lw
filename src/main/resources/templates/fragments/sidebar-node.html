@@ -1,30 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <body>
 
-<th:block th:fragment="nodeFragment(node)">
+    <th:block th:fragment="nodeFragment(node)">
 
-<ul th:if="${node != null}">
+        <ul th:if="${node != null}">
 
-    <li th:if="${node.file}">
-        <a th:href="@{'/view?path=' + ${node.path}}"
-           th:text="${node.name}">
-        </a>
-    </li>
-
-    <li th:if="${!node.file}">
-        <span th:text="${node.name}"></span>
-
-        <ul th:if="${node.children != null}">
-            <li th:each="child : ${node.children}"
-                th:replace="fragments/sidebar-node :: nodeFragment(${child})">
+            <li th:if="${node.file}">
+                <a th:href="@{'/view?path=' + ${node.path}}" th:text="${node.name}">
+                </a>
             </li>
+
+            <li th:if="${!node.file}">
+                <span th:text="${node.name}"></span>
+
+                <ul th:if="${node.children != null}">
+                    <li th:each="child : ${node.children}"
+                        th:replace="fragments/sidebar-node :: nodeFragment(${child})">
+                    </li>
+                </ul>
+            </li>
+
         </ul>
-    </li>
 
-</ul>
-
-</th:block>
+    </th:block>
 
 </body>
+
 </html>

@@ -1,92 +1,88 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <body>
 
-<div th:fragment="sidebar">
-    <div class="sidebar" id="sidebar">
+    <div th:fragment="sidebar">
+        <div class="sidebar" id="sidebar">
 
-        <div class="sidebar-header">
-            <h2>Dokumen [[${secondary}]]</h2>
-            <input type="text" placeholder="Search" class="search-box" />
+            <div class="sidebar-header">
+                <h2>Dokumen [[${secondary}]]</h2>
+                <input type="text" placeholder="Search" class="search-box" />
+            </div>
+
+            <ul class="tree">
+                <li th:each="node : ${sidebar}">
+                    <div th:replace="fragments/sidebar :: treeNode(${node})"></div>
+                </li>
+            </ul>
+
         </div>
-
-        <ul class="tree">
-            <li th:each="node : ${sidebar}">
-                <div th:replace="fragments/sidebar :: treeNode(${node})"></div>
-            </li>
-        </ul>
-
-    </div>
-</div>
-
-<!-- ============================= -->
-<!-- RECURSIVE NODE -->
-<!-- ============================= -->
-<div th:fragment="treeNode(node)">
-
-    <!-- ===== FOLDER ===== -->
-    <div th:if="${node.folder}">
-        <div class="folder-header folder-toggle">
-            <span class="icon">📂</span>
-            <span class="folder-name" style="font-weight: bold;" th:text="${node.name}"></span>
-        </div>
-
-        <ul class="hidden">
-            <li th:each="child : ${node.children}">
-                <div th:replace="fragments/sidebar :: treeNode(${child})"></div>
-            </li>
-
-            <li th:if="${node.children.size() == 0}">
-                <span>file belum ada, next update...</span>
-            </li>
-        </ul>
     </div>
 
-    <!-- ===== FILE ===== -->
-    <div th:if="${!node.folder}" class="file-item">
+    <!-- ============================= -->
+    <!-- RECURSIVE NODE -->
+    <!-- ============================= -->
+    <div th:fragment="treeNode(node)">
 
-        <span class="file-icon" 
-              th:if="${#strings.endsWith(node.name.toLowerCase(), '.pdf')}">
-            <img width="20" height="20" src="https://img.icons8.com/color/50/pdf.png" alt="pdf"/>
-        </span>
+        <!-- ===== FOLDER ===== -->
+        <div th:if="${node.folder}">
+            <div class="folder-header folder-toggle">
+                <span class="icon">📂</span>
+                <span class="folder-name" style="font-weight: bold;" th:text="${node.name}"></span>
+            </div>
 
-        <span class="file-icon" 
-              th:if="${#strings.endsWith(node.name.toLowerCase(), '.doc') 
+            <ul class="hidden">
+                <li th:each="child : ${node.children}">
+                    <div th:replace="fragments/sidebar :: treeNode(${child})"></div>
+                </li>
+
+                <li th:if="${node.children.size() == 0}">
+                    <span>file belum ada, next update...</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ===== FILE ===== -->
+        <div th:if="${!node.folder}" class="file-item">
+
+            <span class="file-icon" th:if="${#strings.endsWith(node.name.toLowerCase(), '.pdf')}">
+                <img width="20" height="20" src="https://img.icons8.com/color/50/pdf.png" alt="pdf" />
+            </span>
+
+            <span class="file-icon" th:if="${#strings.endsWith(node.name.toLowerCase(), '.doc') 
                       or #strings.endsWith(node.name.toLowerCase(), '.docx')}">
-            <img width="20" height="20" src="https://img.icons8.com/color/50/ms-word.png" alt="ms-word"/>
-        </span>
+                <img width="20" height="20" src="https://img.icons8.com/color/50/ms-word.png" alt="ms-word" />
+            </span>
 
-        <span class="file-icon" 
-              th:if="${#strings.endsWith(node.name.toLowerCase(), '.xls') 
+            <span class="file-icon" th:if="${#strings.endsWith(node.name.toLowerCase(), '.xls') 
                       or #strings.endsWith(node.name.toLowerCase(), '.xlsx')}">
-            <img width="20" height="20" src="https://img.icons8.com/color/48/ms-excel.png" alt="ms-excel"/>
-        </span>
+                <img width="20" height="20" src="https://img.icons8.com/color/48/ms-excel.png" alt="ms-excel" />
+            </span>
 
-        <span class="file-icon" 
-              th:if="${#strings.endsWith(node.name.toLowerCase(), '.ppt') 
+            <span class="file-icon" th:if="${#strings.endsWith(node.name.toLowerCase(), '.ppt') 
                       or #strings.endsWith(node.name.toLowerCase(), '.pptx')}">
-            <img width="20" height="20" src="https://img.icons8.com/color/50/ms-powerpoint.png" alt="ms-powerpoint"/>
-        </span>
+                <img width="20" height="20" src="https://img.icons8.com/color/50/ms-powerpoint.png"
+                    alt="ms-powerpoint" />
+            </span>
 
-        <span class="file-icon" 
-              th:if="${!(#strings.endsWith(node.name.toLowerCase(), '.pdf')
+            <span class="file-icon" th:if="${!(#strings.endsWith(node.name.toLowerCase(), '.pdf')
                       or #strings.endsWith(node.name.toLowerCase(), '.doc')
                       or #strings.endsWith(node.name.toLowerCase(), '.docx')
                       or #strings.endsWith(node.name.toLowerCase(), '.xls')
                       or #strings.endsWith(node.name.toLowerCase(), '.xlsx')
                       or #strings.endsWith(node.name.toLowerCase(), '.ppt')
                       or #strings.endsWith(node.name.toLowerCase(), '.pptx'))}">
-            📄
-        </span>
+                📄
+            </span>
 
-        <span class="file-link"
-              th:attr="data-file=${node.path}"
-              th:text="${node.name}">
-        </span>
+            <span class="file-link" th:attr="data-file=${node.path}" th:text="${node.name}">
+            </span>
+
+        </div>
 
     </div>
 
-</div>
-
 </body>
+
 </html>

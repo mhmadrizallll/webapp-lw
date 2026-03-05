@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Form IT - PT. LWI</title>
@@ -7,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/form_it.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
 
     <!-- Navbar utama -->
@@ -24,9 +26,8 @@
             <div class="text-container">
                 <ul>
                     <li th:each="file : ${files}">
-                        <a th:href="@{'/pdfs/FORM-IT/' + ${file}}"
-                           th:text="${#strings.replace(file, '.pdf', '')}"
-                           target="_blank">
+                        <a th:href="@{'/pdfs/FORM-IT/' + ${file}}" th:text="${#strings.replace(file, '.pdf', '')}"
+                            target="_blank">
                         </a>
                     </li>
                 </ul>
@@ -38,4 +39,5 @@
     <div th:replace="fragments/footer :: footer"></div>
 
 </body>
+
 </html>

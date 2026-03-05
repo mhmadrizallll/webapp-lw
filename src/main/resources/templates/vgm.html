@@ -1,51 +1,50 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-    <meta charset="UTF-8">
-    <title> FIG5 VGM - PT. LWI</title>
-    <link rel="stylesheet" th:href="@{/css/it.css}">
-    <link rel="stylesheet" th:href="@{/css/fig5.css}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base href="${pageContext.request.contextPath}/">
+     <meta charset="UTF-8">
+     <title> FIG5 VGM - PT. LWI</title>
+     <link rel="stylesheet" th:href="@{/css/it.css}">
+     <link rel="stylesheet" th:href="@{/css/fig5.css}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <base href="${pageContext.request.contextPath}/">
 </head>
+
 <body>
 
      <!-- Navbar utama -->
-<div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
+     <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
-<!-- Navbar secondary FIG5 -->
-<!-- <div th:replace="fragments/navbar-secondary-fig5 :: 
-secondaryFig5(${secondary})"></div> -->
+     <!-- Navbar FIG5 -->
+     <div sec:authorize="hasRole('FIG5')" th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})">
+     </div>
 
-<!-- Navbar FIG5 -->
-<div sec:authorize="hasRole('FIG5')"
-     th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})"></div>
+     <!-- Navbar FILW_ON -->
+     <div sec:authorize="hasRole('FILW_ON')"
+          th:replace="fragments/navbar-secondary-filw-on :: secondaryFilwOn(${secondary})"></div>
 
-<!-- Navbar FILW_ON -->
-<div sec:authorize="hasRole('FILW_ON')"
-     th:replace="fragments/navbar-secondary-filw-on :: secondaryFilwOn(${secondary})"></div>
+     <!-- Navbar FILW_NB -->
+     <div sec:authorize="hasRole('FILW_NB')"
+          th:replace="fragments/navbar-secondary-filw-nb :: secondaryFilwNb(${secondary})"></div>
 
-<!-- Navbar FILW_NB -->
-<div sec:authorize="hasRole('FILW_NB')"
-     th:replace="fragments/navbar-secondary-filw-nb :: secondaryFilwNb(${secondary})"></div>
-    
- <!-- ===== SECTION IT ===== -->
- <div class="container">
-     <!-- Sidebar -->
-    <div th:replace="fragments/sidebar :: sidebar"></div>
-  
-    <!-- Resizer -->
-    <div class="resizer" id="resizer"></div>
-  
-    <!-- Viewer -->
-    <div class="viewer">
-      <iframe id="pdfViewer"></iframe>
-    </div>
- </div>
-  
-  <script src="/js/sidebar.js"></script>
+     <!-- ===== SECTION IT ===== -->
+     <div class="container">
+          <!-- Sidebar -->
+          <div th:replace="fragments/sidebar :: sidebar"></div>
 
- <!-- ===== FOOTER ===== -->
-       <div th:replace="fragments/footer :: footer"></div>
+          <!-- Resizer -->
+          <div class="resizer" id="resizer"></div>
+
+          <!-- Viewer -->
+          <div class="viewer">
+               <iframe id="pdfViewer"></iframe>
+          </div>
+     </div>
+
+     <script src="/js/sidebar.js"></script>
+
+     <!-- ===== FOOTER ===== -->
+     <div th:replace="fragments/footer :: footer"></div>
 </body>
+
 </html>

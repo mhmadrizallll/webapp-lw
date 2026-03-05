@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Login Berhasil</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
 
-<script th:inline="javascript">
-    document.addEventListener("DOMContentLoaded", function () {
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
 
-        var redirectUrl = /*[[${redirectUrl}]]*/ "/";
+            var redirectUrl = /*[[${redirectUrl}]]*/ "/";
 
-        Swal.fire({
-            icon: 'success',
-            title: 'Login Berhasil',
-            text: 'Selamat datang!',
-            confirmButtonText: 'Masuk'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = redirectUrl;
-            }
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Berhasil',
+                text: 'Selamat datang!',
+                confirmButtonText: 'Masuk'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = redirectUrl;
+                }
+            });
+
         });
-
-    });
-</script>
+    </script>
 
 </body>
+
 </html>

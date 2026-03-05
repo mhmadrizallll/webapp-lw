@@ -7,19 +7,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatabaseTestRunner implements CommandLineRunner {
 
-    private final JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
-    public DatabaseTestRunner(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+  public DatabaseTestRunner(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
+  }
 
-    @Override
-    public void run(String... args) throws Exception {
-        try {
-            String dbName = jdbcTemplate.queryForObject("SELECT DATABASE()", String.class);
-            System.out.println("Koneksi berhasil! Database: " + dbName);
-        } catch (Exception e) {
-            System.err.println("Gagal koneksi: " + e.getMessage());
-        }
+  @Override
+  public void run(String... args) throws Exception {
+    try {
+      String dbName = jdbcTemplate.queryForObject(
+        "SELECT DATABASE()",
+        String.class
+      );
+      System.out.println("Koneksi berhasil! Database: " + dbName);
+    } catch (Exception e) {
+      System.err.println("Gagal koneksi: " + e.getMessage());
     }
+  }
 }

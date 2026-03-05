@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Telepon Extension - PT. LWI</title>
-     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/form_it.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
 
     <!-- Navbar utama -->
@@ -21,12 +23,11 @@
             <h2>TELEPON EXTENSION</h2>
             <p>Pilih informasi dibawah ini untuk ditampilkan:</p>
 
-             <div class="text-container">
+            <div class="text-container">
                 <ul>
                     <li th:each="file : ${files}">
                         <a th:href="@{'/pdfs/TELEPON-EXTENSION/' + ${file}}"
-                           th:text="${#strings.replace(file, '.pdf', '')}"
-                           target="_blank">
+                            th:text="${#strings.replace(file, '.pdf', '')}" target="_blank">
                         </a>
                     </li>
                 </ul>
@@ -38,4 +39,5 @@
     <div th:replace="fragments/footer :: footer"></div>
 
 </body>
+
 </html>

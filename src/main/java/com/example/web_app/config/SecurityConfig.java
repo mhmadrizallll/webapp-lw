@@ -49,6 +49,7 @@ public class SecurityConfig {
       .formLogin(form ->
         form
           .loginPage("/login")
+          .failureUrl("/login?error=true") // 🔥 jika login gagal
           .successHandler((request, response, authentication) -> {
             String role = authentication
               .getAuthorities()
