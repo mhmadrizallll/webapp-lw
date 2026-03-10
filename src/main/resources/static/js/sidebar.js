@@ -1,16 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
-
-  const sidebar = document.getElementById('sidebar');
-  const viewer = document.getElementById('pdfViewer');
-  const resizer = document.getElementById('resizer');
-  const MIN = 150, MAX = 900;
+  const sidebar = document.getElementById("sidebar");
+  const viewer = document.getElementById("pdfViewer");
+  const resizer = document.getElementById("resizer");
+  const MIN = 150,
+    MAX = 900;
 
   // ===========================
   // 🔹 Section Helper
   // ===========================
   function getCurrentSection() {
     const params = new URLSearchParams(window.location.search);
-    return params.get('secondary') || 'UNKNOWN';
+    return params.get("secondary") || "UNKNOWN";
   }
 
   // ===========================
@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function saveOpenFolders() {
     const openFolders = [];
 
-    document.querySelectorAll('.tree ul').forEach((ul, index) => {
-      if (!ul.classList.contains('hidden')) {
+    document.querySelectorAll(".tree ul").forEach((ul, index) => {
+      if (!ul.classList.contains("hidden")) {
         openFolders.push(index);
       }
     });
@@ -32,66 +32,62 @@ document.addEventListener("DOMContentLoaded", function () {
   function restoreOpenFolders() {
     const section = getCurrentSection();
     const openFolders = JSON.parse(
-      localStorage.getItem(`openFolders_${section}`) || '[]'
+      localStorage.getItem(`openFolders_${section}`) || "[]",
     );
 
-    document.querySelectorAll('.tree ul').forEach((ul, index) => {
+    document.querySelectorAll(".tree ul").forEach((ul, index) => {
       if (openFolders.includes(index)) {
-        ul.classList.remove('hidden');
+        ul.classList.remove("hidden");
       }
     });
   }
 
   // Reset jika pindah section
   const current = getCurrentSection();
-  const last = localStorage.getItem('lastSection');
+  const last = localStorage.getItem("lastSection");
   if (last && last !== current) {
     localStorage.removeItem(`openFolders_${last}`);
   }
-  localStorage.setItem('lastSection', current);
+  localStorage.setItem("lastSection", current);
 
   restoreOpenFolders();
 
   // ===========================
   // 🔹 CLICK HANDLER (FOLDER + FILE)
   // ===========================
-  document.addEventListener('click', function (e) {
-
+  document.addEventListener("click", function (e) {
     // ===== Folder Toggle FIXED =====
-    const toggle = e.target.closest('.folder-toggle');
+    const toggle = e.target.closest(".folder-toggle");
     if (toggle) {
-
       // Ambil UL tepat setelah folder-header
       const content = toggle.nextElementSibling;
 
-      if (!content || content.tagName !== 'UL') return;
+      if (!content || content.tagName !== "UL") return;
 
-      const isHidden = content.classList.toggle('hidden');
-      toggle.classList.toggle('open', !isHidden);
+      const isHidden = content.classList.toggle("hidden");
+      toggle.classList.toggle("open", !isHidden);
 
       saveOpenFolders();
       return;
     }
 
     // ===== File Click =====
-    const fileElement = e.target.closest('.file-link');
+    const fileElement = e.target.closest(".file-link");
     if (fileElement) {
-
-      const filePath = fileElement.getAttribute('data-file');
+      const filePath = fileElement.getAttribute("data-file");
       if (!filePath) {
         alert("File tidak ditemukan!");
         return;
       }
 
-      const extension = filePath.split('.').pop().toLowerCase();
+      const extension = filePath.split(".").pop().toLowerCase();
 
       // ===== Jika PDF → buka di PDFJS =====
       if (extension === "pdf") {
-
-        const encoded = encodeURIComponent(filePath);
+        const pdfUrl = "/docs/" + filePath;
 
         if (viewer) {
-          viewer.src = `/pdfjs/web/viewer.html?file=${encoded}`;
+          viewer.src = `/pdfjs/web/viewer.html?file=${encodeURIComponent(pdfUrl)}`;
         }
       }
 
@@ -102,22 +98,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
       return;
     }
-
   });
 
   // ===========================
   // 🔹 Search Recursive
   // ===========================
-  const searchInput = document.querySelector('.search-box');
+  const searchInput = document.querySelector(".search-box");
 
-  searchInput?.addEventListener('input', function () {
-
+  searchInput?.addEventListener("input", function () {
     const query = this.value.toLowerCase();
 
-    document.querySelectorAll('.tree li').forEach(li => {
-
+    document.querySelectorAll(".tree li").forEach((li) => {
       if (!query) {
-        li.style.display = '';
+        li.style.display = "";
         restoreOpenFolders();
         return;
       }
@@ -125,16 +118,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const text = li.textContent.toLowerCase();
       const matched = text.includes(query);
 
-      li.style.display = matched ? '' : 'none';
+      li.style.display = matched ? "" : "none";
 
       if (matched) {
-        let parent = li.closest('ul');
-        while (parent && parent.classList.contains('hidden')) {
-          parent.classList.remove('hidden');
-          parent = parent.parentElement.closest('ul');
+        let parent = li.closest("ul");
+        while (parent && parent.classList.contains("hidden")) {
+          parent.classList.remove("hidden");
+          parent = parent.parentElement.closest("ul");
         }
       }
-
     });
 
     saveOpenFolders();
@@ -143,54 +135,59 @@ document.addEventListener("DOMContentLoaded", function () {
   // ===========================
   // 🔹 Drag Sidebar Resize
   // ===========================
-  let startX = 0, startW = 0, overlay = null;
-  const saved = +localStorage.getItem('sidebarWidth');
-  if (saved) sidebar.style.width = saved + 'px';
+  let startX = 0,
+    startW = 0,
+    overlay = null;
+  const saved = +localStorage.getItem("sidebarWidth");
+  if (saved) sidebar.style.width = saved + "px";
 
   function onMove(e) {
     const x = e.clientX ?? e.touches?.[0]?.clientX;
     const newW = Math.max(MIN, Math.min(MAX, startW + (x - startX)));
-    sidebar.style.width = newW + 'px';
+    sidebar.style.width = newW + "px";
   }
 
   function endDrag() {
-    window.removeEventListener('mousemove', onMove, true);
-    window.removeEventListener('mouseup', endDrag, true);
-    window.removeEventListener('touchmove', onMove, true);
-    window.removeEventListener('touchend', endDrag, true);
+    window.removeEventListener("mousemove", onMove, true);
+    window.removeEventListener("mouseup", endDrag, true);
+    window.removeEventListener("touchmove", onMove, true);
+    window.removeEventListener("touchend", endDrag, true);
 
-    document.body.classList.remove('dragging');
-    if (viewer) viewer.style.pointerEvents = '';
+    document.body.classList.remove("dragging");
+    if (viewer) viewer.style.pointerEvents = "";
     overlay?.remove();
 
-    localStorage.setItem('sidebarWidth', sidebar.offsetWidth);
+    localStorage.setItem("sidebarWidth", sidebar.offsetWidth);
   }
 
   function beginDrag(clientX) {
     startX = clientX;
     startW = sidebar.getBoundingClientRect().width;
 
-    window.addEventListener('mousemove', onMove, true);
-    window.addEventListener('mouseup', endDrag, true);
-    window.addEventListener('touchmove', onMove, true);
-    window.addEventListener('touchend', endDrag, true);
+    window.addEventListener("mousemove", onMove, true);
+    window.addEventListener("mouseup", endDrag, true);
+    window.addEventListener("touchmove", onMove, true);
+    window.addEventListener("touchend", endDrag, true);
 
-    document.body.classList.add('dragging');
+    document.body.classList.add("dragging");
 
-    if (viewer) viewer.style.pointerEvents = 'none';
+    if (viewer) viewer.style.pointerEvents = "none";
 
-    overlay = document.createElement('div');
-    overlay.className = 'drag-overlay';
+    overlay = document.createElement("div");
+    overlay.className = "drag-overlay";
     document.body.appendChild(overlay);
   }
 
-  resizer?.addEventListener('mousedown', e => {
+  resizer?.addEventListener("mousedown", (e) => {
     e.preventDefault();
     beginDrag(e.clientX);
   });
 
-  resizer?.addEventListener('touchstart', e => {
-    beginDrag(e.touches[0].clientX);
-  }, { passive: true });
-
+  resizer?.addEventListener(
+    "touchstart",
+    (e) => {
+      beginDrag(e.touches[0].clientX);
+    },
+    { passive: true },
+  );
 });

@@ -1,115 +1,54 @@
 package com.example.web_app.controller.web;
 
-import com.example.web_app.model.SidebarNode;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.web_app.service.FileTreeService;
+
 @Controller
 public class HrdController {
 
-  // Folder sejajar dengan project
-  private final String BASE_DIR = "../";
+    private final FileTreeService fileTreeService;
 
-  // ==========================================
-  // HRD PAGE
-  // ==========================================
-  @GetMapping("/{type}/hrd")
-  public String hrdPage(
-    @PathVariable String type,
-    Authentication authentication,
-    Model model
-  ) {
-    String role = authentication
-      .getAuthorities()
-      .iterator()
-      .next()
-      .getAuthority();
-
-    type = type.toLowerCase();
-
-    // ======================
-    // VALIDASI ROLE
-    // ======================
-    if (!role.equals("ADMIN")) {
-      if (role.equals("FIG5") && !type.equals("fig5")) {
-        return "redirect:/access-denied";
-      }
-
-      if (role.equals("FILW_ON") && !type.equals("filw-on")) {
-        return "redirect:/access-denied";
-      }
-
-      if (role.equals("FILW_NB") && !type.equals("filw-nb")) {
-        return "redirect:/access-denied";
-      }
+    public HrdController(FileTreeService fileTreeService) {
+        this.fileTreeService = fileTreeService;
     }
 
-    model.addAttribute("primary", type.toUpperCase());
-    model.addAttribute("secondary", "HRD");
-    model.addAttribute("role", role);
+    @GetMapping("/{type}/hrd")
+    public String hrdPage(
+            @PathVariable String type,
+            Authentication authentication,
+            Model model
+    ) {
 
-    model.addAttribute("sidebar", buildTree(type + "/HRD"));
+        String role = authentication
+                .getAuthorities()
+                .iterator()
+                .next()
+                .getAuthority();
 
-    return "hrd";
-  }
+        type = type.toUpperCase();
 
-  // ==========================================
-  // BUILD SIDEBAR TREE (RECURSIVE)
-  // ==========================================
-  private List<SidebarNode> buildTree(String rootPath) {
-    List<SidebarNode> nodes = new ArrayList<>();
+        if (!role.equals("ADMIN")) {
 
-    File rootDir = new File(BASE_DIR + rootPath);
+            if (role.equals("FIG5") && !type.equals("FIG5"))
+                return "redirect:/access-denied";
 
-    if (!rootDir.exists() || !rootDir.isDirectory()) {
-      return nodes;
+            if (role.equals("FILW_ON") && !type.equals("FILW_ON"))
+                return "redirect:/access-denied";
+
+            if (role.equals("FILW_NB") && !type.equals("FILW_NB"))
+                return "redirect:/access-denied";
+        }
+
+        model.addAttribute("primary", type);
+        model.addAttribute("secondary", "HRD");
+        model.addAttribute("role", role);
+
+        model.addAttribute("sidebar", fileTreeService.buildTree(type + "/HRD"));
+
+        return "hrd";
     }
-
-    File[] files = rootDir.listFiles();
-    if (files == null) return nodes;
-
-    for (File file : files) {
-      if (file.isDirectory()) {
-        SidebarNode folderNode = new SidebarNode(file.getName(), true, null);
-
-        folderNode
-          .getChildren()
-          .addAll(buildTree(rootPath + "/" + file.getName()));
-
-        nodes.add(folderNode);
-      } else if (file.isFile() && isSupportedFile(file.getName())) {
-        nodes.add(
-          new SidebarNode(
-            file.getName(),
-            false,
-            "/" + rootPath + "/" + file.getName()
-          )
-        );
-      }
-    }
-
-    return nodes;
-  }
-
-  // ==========================================
-  // SUPPORTED FILE TYPES
-  // ==========================================
-  private boolean isSupportedFile(String fileName) {
-    String lower = fileName.toLowerCase();
-
-    return (
-      lower.endsWith(".pdf") ||
-      lower.endsWith(".doc") ||
-      lower.endsWith(".docx") ||
-      lower.endsWith(".xls") ||
-      lower.endsWith(".xlsx") ||
-      lower.endsWith(".ppt") ||
-      lower.endsWith(".pptx")
-    );
-  }
 }

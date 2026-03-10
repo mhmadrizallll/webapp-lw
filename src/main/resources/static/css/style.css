@@ -65,7 +65,10 @@ nav a:hover {
     background: url("../images/D1.png") no-repeat center center;
     background-size: cover;
     color: white;
-    flex: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     position: relative;
 }
 
