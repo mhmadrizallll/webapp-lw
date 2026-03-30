@@ -15,7 +15,8 @@ public class TeleponExtensionController {
 
   @GetMapping("/telepon_extension")
   public String TeleponExtensionPage(Model model) throws IOException {
-    model.addAttribute("primary", "TELEPON_EXTENSION");
+    model.addAttribute("primary", "informasi_it");
+    model.addAttribute("thirth", "telepon_extension");
 
     // 🔥 AUTO READ PDF
     model.addAttribute("files", getPdfFiles("pdfs/TELEPON-EXTENSION"));

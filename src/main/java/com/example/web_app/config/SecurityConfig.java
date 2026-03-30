@@ -18,7 +18,7 @@ public class SecurityConfig {
       .headers(headers -> headers.frameOptions(frame -> frame.disable()))
       .authorizeHttpRequests(auth ->
         auth
-          .requestMatchers("/", "/login", "/login-success")
+          .requestMatchers("/", "/login", "/login-success", "/access-denied")
           .permitAll()
           .requestMatchers("/auth/register")
           .hasRole("ADMIN")
@@ -36,20 +36,26 @@ public class SecurityConfig {
             "/pdfjs/**"
           )
           .permitAll()
-          .requestMatchers("/fig5/**")
+
+          // 🔥 WAJIB tambahkan root + subpath
+          .requestMatchers("/fig5", "/fig5/**")
           .hasAnyRole("FIG5", "ADMIN")
-          .requestMatchers("/filw-nb/**")
+
+          .requestMatchers("/filw-nb", "/filw-nb/**")
           .hasAnyRole("FILW_NB", "ADMIN")
-          .requestMatchers("/filw-on/**")
+
+          .requestMatchers("/filw-on", "/filw-on/**")
           .hasAnyRole("FILW_ON", "ADMIN")
+
           .anyRequest()
           .authenticated()
       )
-      // 🔥 LOGIN SUCCESS → SWEET ALERT DULU
+
+      // 🔥 LOGIN SUCCESS → HALAMAN TRANSISI
       .formLogin(form ->
         form
           .loginPage("/login")
-          .failureUrl("/login?error=true") // 🔥 jika login gagal
+          .failureUrl("/login?error=true")
           .successHandler((request, response, authentication) -> {
             String role = authentication
               .getAuthorities()
@@ -63,33 +69,38 @@ public class SecurityConfig {
           })
           .permitAll()
       )
-      // 🔥 ACCESS DENIED → LOGOUT + ALERT
+
+      // 🔥 ACCESS DENIED → HALAMAN ACCESS DENIED
       .exceptionHandling(ex ->
         ex.accessDeniedHandler((request, response, accessDeniedException) -> {
           String uri = request.getRequestURI();
 
+          // hapus session lama
           request.getSession().invalidate();
-          request.getSession(true);
+
+          // buat session baru
+          var newSession = request.getSession(true);
 
           if (uri.startsWith("/filw-nb")) {
-            request.getSession().setAttribute("DENIED_ROLE", "FILW_NB");
+            newSession.setAttribute("DENIED_ROLE", "FILW_NB");
           } else if (uri.startsWith("/filw-on")) {
-            request.getSession().setAttribute("DENIED_ROLE", "FILW_ON");
+            newSession.setAttribute("DENIED_ROLE", "FILW_ON");
           } else if (uri.startsWith("/fig5")) {
-            request.getSession().setAttribute("DENIED_ROLE", "FIG5");
+            newSession.setAttribute("DENIED_ROLE", "FIG5");
           }
 
-          response.sendRedirect("/login");
+          response.sendRedirect("/access-denied");
         })
       )
+
       .logout(logout ->
-        logout
-          .logoutUrl("/logout")
-          .logoutSuccessUrl("/login?logout")
-          .invalidateHttpSession(true)
-          .deleteCookies("JSESSIONID")
-          .permitAll()
-      );
+    logout
+        .logoutUrl("/logout")
+        .logoutSuccessUrl("/logout-success") // redirect ke halaman terpisah
+        .invalidateHttpSession(true)
+        .deleteCookies("JSESSIONID")
+        .permitAll()
+);
 
     return http.build();
   }

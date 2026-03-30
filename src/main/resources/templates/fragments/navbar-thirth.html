@@ -1,9 +1,23 @@
 <div th:fragment="navbarThirth(active)">
     <nav class="navbar-thirth">
-        <a th:href="@{/form_it}" class="active">FORM IT</a>
-        <a th:href="@{/petunjuk_it}">PETUNJUK IT</a>
-        <a th:href="@{/prosedur_it}">PROSEDUR IT</a>
-        <a th:href="@{/telepon_extension}">TELEPON EXTENSION</a>
-        <a th:href="@{/daily_report}">DAILY REPORT</a>
+        <a th:href="@{/form_it}" th:classappend="${active == 'form_it'} ? ' active' : ''">
+            FORM IT
+        </a>
+
+        <a th:href="@{/petunjuk_it}" th:classappend="${active == 'petunjuk_it'} ? ' active' : ''">
+            PETUNJUK IT
+        </a>
+
+        <a th:href="@{/prosedur_it}" th:classappend="${active == 'prosedur_it'} ? ' active' : ''">
+            PROSEDUR IT
+        </a>
+
+        <a th:href="@{/telepon_extension}" th:classappend="${active == 'telepon_extension'} ? ' active' : ''">
+            TELEPON EXTENSION
+        </a>
+
+        <a th:href="@{/daily_report}" th:classappend="${active == 'daily_report'} ? ' active' : ''">
+            DAILY REPORT
+        </a>
     </nav>
 </div>

@@ -1,77 +1,125 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <title>LOGIN - PT. LWI</title>
-    <link rel="stylesheet" th:href="@{/css/login.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font modern -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Style utama portal -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Style khusus login -->
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+
 </head>
 
-<body class="">
+<body class="fig5-page">
 
-    <!-- Navbar utama -->
+    <!-- Navbar -->
     <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
+    <!-- Alert pesan -->
     <div th:if="${customMessage}" class="alert alert-success">
         <span th:text="${customMessage}"></span>
     </div>
 
-    <!-- ===== HERO SECTION ===== -->
-    <section class="hero">
+    <!-- HERO LOGIN -->
+    <section class="hero hero-login">
         <div class="login-box">
             <h2>LOGIN</h2>
-            <form th:action="@{/login}" method="post">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" name="username" id="username" required />
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" name="password" id="password" required />
-                </div>                 
 
-                <button type="submit">Log in</button>
-                <!-- ERROR LOGIN -->
-                <!-- <div th:if="${param.error}" style="color:red; font-size:14px; margin-top:8px; background-color: aliceblue;">
-                    Username atau password salah
-                </div> -->
+            <form th:action="@{/login}" method="post" id="loginForm">
+                <div class="form-group">
+                    <input type="text" name="username" id="username" placeholder=" " required />
+                    <label for="username">Username</label>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" name="password" id="password" placeholder=" " required />
+                    <label for="password">Password</label>
+                </div>
+
+                <button type="submit" id="loginBtn">
+                    <span class="btn-text">Log in</span>
+                    <span class="btn-spinner"></span>
+                </button>
             </form>
         </div>
     </section>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-card">
+            <div class="loader-ring"></div>
+            <h3>Signing in...</h3>
+            <p>Mohon tunggu sebentar</p>
+        </div>
+    </div>
+
+    <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script th:if="${customError}" th:inline="javascript">
+    <!-- SCRIPT LOGIN LOADING -->
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("loginForm");
+            const loginBtn = document.getElementById("loginBtn");
+            const loadingOverlay = document.getElementById("loadingOverlay");
 
-            const errorMessage = /*[[${customError}]]*/ "";
+            let isSubmitting = false;
 
-            Swal.fire({
-                icon: 'error',
-                title: 'Akses Ditolak',
-                text: errorMessage,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'OK'
-            });
+            if (form) {
+                form.addEventListener("submit", function (e) {
+                    if (isSubmitting) return;
 
+                    e.preventDefault();
+                    isSubmitting = true;
+
+                    loginBtn.disabled = true;
+                    loginBtn.classList.add("btn-loading");
+                    loadingOverlay.classList.add("show");
+
+                    setTimeout(() => {
+                        form.submit();
+                    }, 1000);
+                });
+            }
         });
     </script>
+
+    <!-- ERROR LOGIN GAGAL -->
     <script th:if="${param.error}" th:inline="javascript">
         document.addEventListener("DOMContentLoaded", function () {
-
-            const errorMessage = /*[[${param.error}]]*/ "";
-
             Swal.fire({
+                title: 'Login Gagal',
+                html: `
+                    <div style="font-size:15px; line-height:1.7; color:#475569;">
+                        Username atau password yang Anda masukkan tidak sesuai.
+                    </div>
+                `,
                 icon: 'error',
-                title: 'Akses Ditolak',
-                text: "Username atau password salah",
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'Coba Lagi',
+                confirmButtonColor: '#b71c1c',
+                background: '#ffffff',
+                color: '#111827',
+                backdrop: 'rgba(15, 23, 42, 0.55)',
+                customClass: {
+                    popup: 'modern-swal-popup',
+                    title: 'modern-swal-title',
+                    confirmButton: 'modern-swal-button'
+                }
             });
-
         });
     </script>
-    <!-- ===== FOOTER ===== -->
+
+
+
+    <!-- Footer -->
     <div th:replace="fragments/footer :: footer"></div>
 
 </body>

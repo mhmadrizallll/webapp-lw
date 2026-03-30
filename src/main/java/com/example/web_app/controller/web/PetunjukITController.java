@@ -15,7 +15,8 @@ public class PetunjukITController {
 
   @GetMapping("/petunjuk_it")
   public String petunjukITPage(Model model) throws IOException {
-    model.addAttribute("primary", "PETUNJUK_IT");
+    model.addAttribute("primary", "informasi_it");
+    model.addAttribute("thirth", "petunjuk_it");
 
     // 🔥 AUTO READ PDF
     model.addAttribute("files", getPdfFiles("pdfs/PETUNJUK-IT"));

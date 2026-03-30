@@ -15,7 +15,8 @@ public class FormITController {
 
   @GetMapping("/form_it")
   public String formITPage(Model model) throws IOException {
-    model.addAttribute("primary", "FORM_IT");
+     model.addAttribute("primary", "informasi_it");
+    model.addAttribute("thirth", "form_it");
 
     // 🔥 AUTO READ PDF
     model.addAttribute("files", getPdfFiles("pdfs/FORM-IT"));

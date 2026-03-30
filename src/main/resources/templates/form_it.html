@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <title>Form IT - PT. LWI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font modern -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/form_it.css}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -14,28 +20,48 @@
     <!-- Navbar utama -->
     <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
-    <!-- ===== SECONDARY NAVIGATION ===== -->
+    <!-- Navbar secondary -->
     <div th:replace="fragments/navbar-thirth :: navbarThirth(${thirth})"></div>
 
-    <!-- ===== SECTION FORM IT ===== -->
-    <section class="form-hero-gray">
-        <div class="hero-content">
-            <h2>FORM IT</h2>
-            <p>Pilih salah satu informasi untuk ditampilkan:</p>
+    <!-- ===== HERO SECTION ===== -->
+    <section class="form-hero">
+        <div class="form-hero-overlay"></div>
 
-            <div class="text-container">
-                <ul>
-                    <li th:each="file : ${files}">
-                        <a th:href="@{'/pdfs/FORM-IT/' + ${file}}" th:text="${#strings.replace(file, '.pdf', '')}"
-                            target="_blank">
-                        </a>
-                    </li>
-                </ul>
+        <div class="form-hero-content">
+            <span class="hero-badge">Portal Internal IT</span>
+            <h1>Form IT</h1>
+            <p>
+                Pilih dokumen atau form yang ingin dibuka untuk kebutuhan operasional
+                dan administrasi internal.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== SECTION LIST FILE ===== -->
+    <section class="form-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Dokumen Tersedia</span>
+                <h2>Daftar Form IT</h2>
+                <p>
+                    Klik salah satu form di bawah untuk membuka file PDF secara langsung.
+                </p>
+            </div>
+
+            <div class="file-grid">
+                <a th:each="file : ${files}" th:href="@{'/pdfs/FORM-IT/' + ${file}}" target="_blank" class="file-card">
+                    <div class="file-icon">📄</div>
+                    <div class="file-info">
+                        <h3 th:text="${#strings.replace(file, '.pdf', '')}">Nama File</h3>
+                        <p>Dokumen PDF</p>
+                    </div>
+                    <div class="file-action">Buka</div>
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- ===== FOOTER ===== -->
+    <!-- Footer -->
     <div th:replace="fragments/footer :: footer"></div>
 
 </body>

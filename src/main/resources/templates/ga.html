@@ -1,19 +1,26 @@
 <!DOCTYPE html>
-<html lang="id">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
      <meta charset="UTF-8">
      <title> FIG5 GA - PT. LWI</title>
-     <link rel="stylesheet" th:href="@{/css/it.css}">
-     <link rel="stylesheet" th:href="@{/css/fig5.css}">
+     <link rel="stylesheet" th:href="@{/css/style.css}">
+     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <base href="${pageContext.request.contextPath}/">
 </head>
 
-<body>
+<body class="fig5-page">
+     <!-- TEST ROLE USER LOGIN -->
+     <!-- <p>Role user saat ini:</p>
 
+-->
      <!-- Navbar utama -->
      <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
+
+     <!-- Navbar Admin -->
+     <div sec:authorize="hasRole('ADMIN')" th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})">
+     </div>
 
      <!-- Navbar FIG5 -->
      <div sec:authorize="hasRole('FIG5')" th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5(${secondary})">
@@ -26,20 +33,16 @@
      <!-- Navbar FILW_NB -->
      <div sec:authorize="hasRole('FILW_NB')"
           th:replace="fragments/navbar-secondary-filw-nb :: secondaryFilwNb(${secondary})"></div>
-
      <!-- ===== SECTION IT ===== -->
-     <div class="container">
-          <!-- Sidebar -->
-          <div th:replace="fragments/sidebar :: sidebar"></div>
-
-          <!-- Resizer -->
-          <div class="resizer" id="resizer"></div>
-
-          <!-- Viewer -->
-          <div class="viewer">
-               <iframe id="pdfViewer"></iframe>
+     <main class="main-wrapper">
+          <div class="app-layout">
+               <div th:replace="fragments/sidebar :: sidebar"></div>
+               <div class="resizer" id="resizer"></div>
+               <div class="viewer">
+                    <iframe id="pdfViewer"></iframe>
+               </div>
           </div>
-     </div>
+     </main>
 
      <script src="/js/sidebar.js"></script>
 

@@ -15,7 +15,8 @@ public class ProsedurITController {
 
   @GetMapping("/prosedur_it")
   public String prosedurITPage(Model model) throws IOException {
-    model.addAttribute("primary", "PROSEDUR_IT");
+    model.addAttribute("primary", "informasi_it");
+    model.addAttribute("thirth", "prosedur_it");
 
     // 🔥 AUTO READ PDF
     model.addAttribute("files", getPdfFiles("pdfs/PROSEDUR-IT"));

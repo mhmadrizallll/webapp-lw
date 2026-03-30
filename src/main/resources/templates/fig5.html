@@ -8,15 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body>
+<body class="fig5-page">
 
     <div th:replace="fragments/navbar-base :: navbarBase('FIG5')"></div>
-    <div th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5('AM')"></div>
+    <div th:replace="fragments/navbar-secondary-fig5 :: secondaryFig5('')"></div>
 
     <!-- ===== HERO CONTENT + PDF VIEWER ===== -->
     <section class="hero-gray">
-        <div class="hero-content">
-            <p>Silahkan pilih informasi di atas untuk ditampilkan:</p>
+        <div class="hero-content text-center">
+            <span class="hero-badge">FIG5 Portal</span>
+            <h1>Selamat Datang di PT. LWI</h1>
+            <p>Pilih informasi di atas untuk melihat dokumen dan panduan operasional internal.</p>
         </div>
     </section>
 

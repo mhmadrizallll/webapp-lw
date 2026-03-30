@@ -1,29 +1,164 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <title>Home - PT. LWI</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-    <!-- Header dan Nav -->
-    <div th:replace="fragments/navbar-base"></div>
 
+    <!-- Navbar -->
+    <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
     <!-- ===== HERO SECTION ===== -->
     <section class="hero">
-        <div class="hero-content">
-            <h2>Standard Operating Procedure</h2>
-            <p>PT. Long Well International</p>
-            <a th:href="@{/informasi_it}" class="btn">Informasi IT</a>
+        <div class="hero-overlay"></div>
+
+        <div class="container hero-wrapper">
+            <div class="hero-left">
+                <span class="hero-badge">PT. Long Well International</span>
+                <h1>Portal Informasi Internal Perusahaan</h1>
+                <p>
+                    Akses SOP, panduan kerja, informasi IT, serta dokumen internal
+                    perusahaan dalam satu portal yang lebih cepat, rapi, dan modern.
+                </p>
+
+                <div class="hero-actions">
+                    <a th:href="@{/informasi_it}" class="btn btn-primary">Masuk Informasi IT</a>
+                    <a href="#quick-access" class="btn btn-secondary">Lihat Menu</a>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <div class="hero-panel">
+                    <div class="panel-top">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="panel-card">
+                            <span>📄</span>
+                            <div>
+                                <h4>Form IT</h4>
+                                <p>Akses dokumen internal</p>
+                            </div>
+                        </div>
+
+                        <div class="panel-card">
+                            <span>📘</span>
+                            <div>
+                                <h4>Petunjuk IT</h4>
+                                <p>Panduan penggunaan sistem</p>
+                            </div>
+                        </div>
+
+                        <div class="panel-card">
+                            <span>📞</span>
+                            <div>
+                                <h4>Telepon Extension</h4>
+                                <p>Kontak internal perusahaan</p>
+                            </div>
+                        </div>
+
+                        <div class="panel-card">
+                            <span>📊</span>
+                            <div>
+                                <h4>Daily Report</h4>
+                                <p>Laporan operasional harian</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== QUICK ACCESS ===== -->
+    <section class="quick-access-section" id="quick-access">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Quick Access</span>
+                <h2>Akses Cepat Portal Internal</h2>
+                <p>
+                    Pilih menu utama untuk membuka informasi yang paling sering digunakan.
+                </p>
+            </div>
+
+            <div class="quick-grid">
+                <a th:href="@{/informasi_it}" class="quick-card">
+                    <div class="quick-icon">💻</div>
+                    <h3>Informasi IT</h3>
+                    <p>Portal utama dokumen dan informasi internal IT.</p>
+                </a>
+
+                <a th:href="@{/form_it}" class="quick-card">
+                    <div class="quick-icon">📄</div>
+                    <h3>Form IT</h3>
+                    <p>Kumpulan form dan dokumen PDF kebutuhan internal.</p>
+                </a>
+
+                <a th:href="@{/petunjuk_it}" class="quick-card">
+                    <div class="quick-icon">📘</div>
+                    <h3>Petunjuk IT</h3>
+                    <p>Panduan penggunaan perangkat, aplikasi, dan sistem.</p>
+                </a>
+
+                <a th:href="@{/daily_report}" class="quick-card">
+                    <div class="quick-icon">📊</div>
+                    <h3>Daily Report</h3>
+                    <p>Akses laporan harian operasional dan aktivitas terkait.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== HIGHLIGHT SECTION ===== -->
+    <section class="highlight-section">
+        <div class="container highlight-wrapper">
+            <div class="highlight-left">
+                <span class="section-badge">Portal Internal</span>
+                <h2>Lebih Cepat, Lebih Terstruktur, Lebih Mudah Digunakan</h2>
+                <p>
+                    Portal ini dibuat untuk memudahkan karyawan dalam menemukan
+                    informasi yang dibutuhkan tanpa harus mencari manual melalui banyak file atau folder.
+                </p>
+
+                <ul class="highlight-list">
+                    <li>✔ Akses dokumen lebih cepat</li>
+                    <li>✔ Informasi terpusat dalam satu sistem</li>
+                    <li>✔ Mudah digunakan oleh user internal</li>
+                    <li>✔ Tampilan responsif untuk desktop & mobile</li>
+                </ul>
+            </div>
+
+            <div class="highlight-right">
+                <div class="info-box">
+                    <h3>Internal Access</h3>
+                    <p>Portal ini dirancang sebagai pusat dokumentasi dan informasi operasional perusahaan.</p>
+                </div>
+                <div class="info-box">
+                    <h3>Structured Documents</h3>
+                    <p>Semua form, panduan, dan informasi penting dikategorikan agar lebih mudah dicari.</p>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- ===== FOOTER ===== -->
     <div th:replace="fragments/footer :: footer"></div>
+
 </body>
 
 </html>

@@ -36,29 +36,51 @@ public class LoginController {
       };
     }
 
-    // 🔥 Alert akses ditolak
+    return "login";
+  }
+
+  @GetMapping("/access-denied")
+  public String accessDenied(HttpServletRequest request, Model model) {
     String denied = (String) request.getSession().getAttribute("DENIED_ROLE");
 
-    if (denied != null) {
-      switch (denied) {
-        case "FILW_NB" -> model.addAttribute(
-          "customError",
-          "Silahkan login dengan akun filw-nb"
-        );
-        case "FILW_ON" -> model.addAttribute(
-          "customError",
-          "Silahkan login dengan akun filw-on"
-        );
-        case "FIG5" -> model.addAttribute(
-          "customError",
-          "Silahkan login dengan akun fig5"
-        );
-      }
-
-      request.getSession().removeAttribute("DENIED_ROLE");
+    if (denied == null) {
+      return "redirect:/login";
     }
 
-    return "login";
+    String title = "Akses Ditolak";
+    String message = "";
+    String targetRole = "";
+
+    switch (denied) {
+      case "FILW_NB" -> {
+        message =
+          "Anda mencoba membuka area FILW-NB. Silakan login menggunakan akun yang sesuai.";
+        targetRole = "FILW-NB";
+      }
+      case "FILW_ON" -> {
+        message =
+          "Anda mencoba membuka area FILW-ON. Silakan login menggunakan akun yang sesuai.";
+        targetRole = "FILW-ON";
+      }
+      case "FIG5" -> {
+        message =
+          "Anda mencoba membuka area FIG5. Silakan login menggunakan akun yang sesuai.";
+        targetRole = "FIG5";
+      }
+      default -> {
+        message = "Anda tidak memiliki akses ke halaman ini.";
+        targetRole = "Portal";
+      }
+    }
+
+    model.addAttribute("title", title);
+    model.addAttribute("message", message);
+    model.addAttribute("targetRole", targetRole);
+    model.addAttribute("redirectUrl", "/login");
+
+    request.getSession().removeAttribute("DENIED_ROLE");
+
+    return "access-denied";
   }
 
   // 🔥 LOGIN SUCCESS PAGE

@@ -1,198 +1,274 @@
-/* ===== RESET DASAR ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    height: 100%;
-    font-family: 'Georgia', 'Times New Roman', serif;
-    background-color: #ffffff;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-size: 16px;
-}
-
-/* ===== HEADER ===== */
-header {
-    background-color: #b71c1c;
-    color: white;
-    padding: 24px 0 14px;
-    text-align: center;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-}
-
-header h1 {
-    font-size: 26px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* ===== NAVIGASI ===== */
-nav {
-    background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    padding: 12px 0;
-    border-bottom: 1px solid #eee;
-}
-
-nav a {
-    color: #222;
-    font-weight: bold;
-    font-size: 15px;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-
-nav a:hover {
-    background-color: #b71c1c;
-    color: #fff;
-}
-
-nav a.active {
-    background-color: #b71c1c;
-    color: #fff;
-}
-
-/* ===== HERO SECTION ===== */
-.hero {
+/* ===== LOGIN HERO ===== */
+.hero-login {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: url("../images/D1.png") no-repeat center center;
-    background-size: cover;
+    min-height: calc(100vh - 80px);
+    background: url("../images/D1.png") no-repeat center center/cover;
     position: relative;
 }
 
-/* ===== LOGIN BOX ===== */
+.hero-login::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1;
+}
+
+/* ===== LOGIN CARD ===== */
 .login-box {
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    width: 320px;
-    text-align: center;
+    position: relative;
+    z-index: 2;
+    background: rgba(255,255,255,0.08); /* glass effect */
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 40px 32px;
+    width: 340px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    transition: transform 0.3s ease;
 }
+
+/* .login-box:hover {
+    transform: translateY(-6px);
+} */
 
 .login-box h2 {
-    margin-bottom: 20px;
-    font-weight: bold;
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
 }
 
+/* ===== FORM FIELDS ===== */
 .form-group {
-    margin-bottom: 15px;
-    text-align: left;
+    position: relative;
+    margin-bottom: 20px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 5px;
+    position: absolute;
+    left: 12px;
+    top: 10px;
     font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    pointer-events: none;
+    transition: 0.3s ease all;
 }
 
 .form-group input {
     width: 100%;
-    padding: 8px;
+    padding: 14px 12px;
+    border-radius: 12px;
     border: none;
-    border-radius: 3px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
 }
 
-.form-group select {
-    width: 100%;
-    padding: 8px;
-    border: none;
-    border-radius: 3px;
+.form-group input:focus {
+    background: rgba(255,255,255,0.25);
 }
 
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label {
+    top: -10px;
+    left: 10px;
+    font-size: 12px;
+    color: #d32f2f; /* highlight */
+}
+
+/* ===== BUTTON ===== */
 button {
     width: 100%;
-    padding: 10px;
+    padding: 14px;
+    border-radius: 999px;
     border: none;
+    font-weight: 700;
     font-size: 16px;
-    border-radius: 3px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    background: #b71c1c; /* primary LWI */
+    color: #fff;
 }
 
-/* ===== FOOTER ===== */
-footer {
-    background: #b71c1c;
-    color: white;
-    text-align: center;
-    padding: 16px 0;
-    font-size: 14px;
-    margin-top: auto;
+button:hover {
+    background: #d32f2f;
+    transform: translateY(-3px);
 }
 
-/* ===== TEMA KHUSUS PER MENU ===== */
-
-/* DEFAULT (fallback) */
-body.DEFAULT .login-box {
-    background: linear-gradient(to right, #eeeeee, #cccccc);
-    color: black;
-}
-
-body.DEFAULT button {
-    background-color: #666;
-    color: white;
-}
-
-body.DEFAULT button:hover {
-    background-color: #444;
-}
-
-/* FIG5 - tema transparan */
+/* ===== THEME VARIANTS (optional) ===== */
 body.FIG5 .login-box {
-    background: linear-gradient(to right, #ffff0);
-    color: white;
+    background: rgba(255,255,255,0.08);
 }
 
-body.FIG5 button {
-    background-color: #778899;
-    color: white;
-}
-
-body.FIG5 button:hover {
-    background-color: #2c3e50;
-}
-
-/* FILW-ON - tema abu-abu */
 body.FILW-ON .login-box {
-    background: linear-gradient(to right, #98afc7);
-    color: white;
+    background: rgba(183,28,28,0.3);
 }
 
-body.FILW-ON button {
-    background-color: #b71c1c;
-    color: white;
-}
-
-body.FILW-ON button:hover {
-    background-color:  #2c3e50;
-}
-
-/* FILW-NB - tema biru */
 body.FILW-NB .login-box {
-    background: linear-gradient(to right, #3090c7, #14a3c7);
+    background: rgba(16,111,188,0.3);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .login-box {
+        width: 90%;
+        padding: 32px 20px;
+    }
+
+    .login-box h2 {
+        font-size: 1.7rem;
+    }
+}
+
+/* ===== BUTTON ENHANCEMENT ===== */
+#loginBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+#loginBtn:disabled {
+    cursor: not-allowed;
+    opacity: 0.95;
+}
+
+/* spinner kecil di tombol */
+.btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    display: none;
+    animation: spin 0.7s linear infinite;
+}
+
+#loginBtn.btn-loading .btn-spinner {
+    display: inline-block;
+}
+
+#loginBtn.btn-loading .btn-text {
+    opacity: 0.95;
+}
+
+/* ===== FULLSCREEN LOADING ===== */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.loading-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ===== LOADING CARD ===== */
+.loading-card {
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 24px;
+    padding: 28px 32px;
+    min-width: 260px;
+    text-align: center;
     color: white;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    animation: fadeUp 0.35s ease;
 }
 
-body.FILW-NB button {
-    background-color: #115f97;
-    color: white;
+.loading-card h3 {
+    margin: 18px 0 8px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
 }
 
-body.FILW-NB button:hover {
-    background-color: #2c3e50;
+.loading-card p {
+    margin: 0;
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
 }
 
+/* ===== MODERN SPINNER ===== */
+.loader-ring {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 5px solid rgba(255,255,255,0.18);
+    border-top: 5px solid #fff;
+    animation: spin 0.9s linear infinite;
+    box-shadow: 0 0 30px rgba(255,255,255,0.08);
+}
+
+/* ===== ANIMATION ===== */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ===== SWEETALERT MODERN ===== */
+.modern-swal-popup {
+    border-radius: 24px !important;
+    padding: 28px 24px !important;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    font-family: 'Inter', sans-serif !important;
+}
+
+.modern-swal-title {
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+    color: #111827 !important;
+    margin-bottom: 10px !important;
+}
+
+.modern-swal-button {
+    border-radius: 999px !important;
+    padding: 12px 28px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 10px 24px rgba(183, 28, 28, 0.24) !important;
+    transition: all 0.3s ease !important;
+}
+
+.modern-swal-button:hover {
+    transform: translateY(-2px);
+}

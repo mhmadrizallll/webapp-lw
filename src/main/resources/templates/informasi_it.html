@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <title>Informasi IT - PT. LWI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font modern -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/form_it.css}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -14,19 +20,83 @@
     <!-- Navbar utama -->
     <div th:replace="fragments/navbar-base :: navbarBase(${primary})"></div>
 
-    <!-- ===== SECONDARY NAVIGATION ===== -->
+    <!-- Navbar secondary -->
     <div th:replace="fragments/navbar-thirth :: navbarThirth(${thirth})"></div>
 
-    <!-- ===== HERO CONTENT + PDF VIEWER ===== -->
-    <section class="form-hero-gray">
-        <div class="hero-content">
-            <h2>Informasi IT</h2>
-            <p>Silahkan pilih informasi di atas untuk ditampilkan:</p>
+    <!-- ===== HERO SECTION ===== -->
+    <section class="form-hero">
+        <div class="form-hero-overlay"></div>
+
+        <div class="form-hero-content">
+            <span class="hero-badge">Portal Internal IT</span>
+            <h1>Informasi IT</h1>
+            <p>
+                Pusat informasi internal untuk membantu karyawan mengakses
+                panduan, dokumen, form, dan kebutuhan operasional IT secara cepat.
+            </p>
         </div>
     </section>
 
-    <!-- ===== FOOTER ===== -->
+    <!-- ===== MENU SECTION ===== -->
+    <section class="form-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Layanan Internal</span>
+                <h2>Akses Informasi IT</h2>
+                <p>
+                    Pilih salah satu kategori di bawah untuk melihat dokumen atau informasi yang tersedia.
+                </p>
+            </div>
+
+            <div class="file-grid">
+
+                <!-- Card 1 -->
+                <a th:href="@{/form_it}" class="file-card">
+                    <div class="file-icon">📄</div>
+                    <div class="file-info">
+                        <h3>Form IT</h3>
+                        <p>Daftar form dan dokumen PDF untuk kebutuhan internal IT.</p>
+                    </div>
+                    <div class="file-action">Buka</div>
+                </a>
+
+                <!-- Card 2 -->
+                <a th:href="@{/sop_it}" class="file-card">
+                    <div class="file-icon">📘</div>
+                    <div class="file-info">
+                        <h3>SOP IT</h3>
+                        <p>Standar operasional prosedur untuk aktivitas dan support IT.</p>
+                    </div>
+                    <div class="file-action">Buka</div>
+                </a>
+
+                <!-- Card 3 -->
+                <a th:href="@{/troubleshooting_it}" class="file-card">
+                    <div class="file-icon">🛠️</div>
+                    <div class="file-info">
+                        <h3>Troubleshooting</h3>
+                        <p>Panduan penyelesaian masalah teknis umum di lingkungan kerja.</p>
+                    </div>
+                    <div class="file-action">Buka</div>
+                </a>
+
+                <!-- Card 4 -->
+                <a th:href="@{/panduan_it}" class="file-card">
+                    <div class="file-icon">💻</div>
+                    <div class="file-info">
+                        <h3>Panduan IT</h3>
+                        <p>Petunjuk penggunaan sistem, perangkat, dan kebutuhan user.</p>
+                    </div>
+                    <div class="file-action">Buka</div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <div th:replace="fragments/footer :: footer"></div>
+
 </body>
 
 </html>

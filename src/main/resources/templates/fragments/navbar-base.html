@@ -1,31 +1,65 @@
-<!-- templates/fragments/navbar-base.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
 
   <div th:fragment="navbarBase(primary)">
-    <header>
-      <h1>
-        <a th:href="@{/}" style="color:#ffffff;text-decoration:none;">
-          PT. Long Well International
-        </a>
-      </h1>
+    <header class="topbar">
+      <div class="topbar-container">
+
+        <!-- LEFT: Logo / Brand -->
+        <div class="topbar-left">
+          <a th:href="@{/}" class="brand">
+            <div class="brand-logo">LW</div>
+            <div class="brand-text">
+              <span class="brand-title">PT. Long Well International</span>
+              <span class="brand-subtitle">Internal Portal</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- CENTER: Main Navigation -->
+        <div class="topbar-center">
+          <nav class="navbar-primary">
+            <a th:href="@{/fig5}" class="nav-link" th:classappend="${primary == 'FIG5'} ? ' active' : ''">
+              FIG5
+            </a>
+
+            <a th:href="@{/filw-on}" class="nav-link" th:classappend="${primary == 'FILW-ON'} ? ' active' : ''">
+              FILW-ON
+            </a>
+
+            <a th:href="@{/filw-nb}" class="nav-link" th:classappend="${primary == 'FILW-NB'} ? ' active' : ''">
+              FILW-NB
+            </a>
+          </nav>
+        </div>
+
+        <!-- RIGHT: User Area -->
+        <div class="topbar-right" sec:authorize="isAuthenticated()">
+          <div class="topbar-user">
+            <div class="user-chip">
+              <div class="user-avatar" th:text="${#strings.substring(#authentication.name,0,1).toUpperCase()}">
+                U
+              </div>
+
+              <div class="user-meta">
+                <span class="user-label">Signed in as</span>
+                <span class="user-name" th:text="${#authentication.name}">username</span>
+              </div>
+            </div>
+
+            <form th:action="@{/logout}" method="post" class="logout-form">
+              <button type="submit" class="logout-btn">
+                <span class="logout-icon">↪</span>
+                Logout
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
     </header>
-
-    <nav class="navbar-primary">
-      <a th:href="@{/fig5}" class="nav-link" th:classappend="${primary == 'FIG5'} ? ' active'">
-        FIG5
-      </a>
-
-      <a th:href="@{/filw-on}" class="nav-link" th:classappend="${primary == 'FILW-ON'} ? ' active'">
-        FILW-ON
-      </a>
-
-      <a th:href="@{/filw-nb}" class="nav-link" th:classappend="${primary == 'FILW-NB'} ? ' active'">
-        FILW-NB
-      </a>
-    </nav>
   </div>
 
 </body>
